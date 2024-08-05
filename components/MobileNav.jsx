@@ -12,10 +12,10 @@ function MobileNav({ navLinks = [] }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="md:hidden block z-10 absolute top-0 right-0 left-0 m-auto ">
-      <div className="container h-20 flex justify-between items-center ">
+    <nav className="md:hidden block z-10 absolute top-0 right-0 left-0 m-auto bg-[#08401A] text-white">
+      <div className="container h-16 flex justify-between items-center ">
         <Link href="/">
-          <div className="h-10 w-28 relative">
+          <div className="h-8 w-28 relative">
             <Image
               fill
               alt="logo"
@@ -62,11 +62,11 @@ function MobileNav({ navLinks = [] }) {
           isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}>
         <div className={`overflow-hidden`}>
-          <div className="w-full bg-black/90 text-white flex flex-col gap-5 p-10 items-center">
+          <div className="w-full bg-[#08401A] text-white flex flex-col gap-5 p-10 items-center">
             {navLinks.map(({ title, path }) => (
               <Link
                 onClick={() => setIsOpen(false)}
-                className={`text-lg font-medium ${
+                className={`text-lg font-medium uppercase ${
                   pathname === path ? 'font-bold' : ''
                 }`}
                 href={path}

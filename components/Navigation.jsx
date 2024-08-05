@@ -5,13 +5,18 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import React from 'react'
+import truncate from '@/lib/truncate'
+import { useAccount } from 'wagmi'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 
 function Navigation({ navLinks = [] }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { open } = useWeb3Modal()
+  const { address, isConnected } = useAccount()
   return (
     <>
-      <div className="space-x-8 md:flex hidden h-full">
+      <div className="space-x-8 flex h-full">
         {navLinks.map(({ title, path }) => (
           <Link key={`header${title}`} href={path}>
             <div className="relative flex justify-center  items-center h-full w-[100px]">
@@ -23,11 +28,12 @@ function Navigation({ navLinks = [] }) {
           </Link>
         ))}
       </div>
-      <div className="gap-4 md:flex hidden items-center">
+      <div className="gap-4 flex items-center">
         <Button
+          onClick={() => open()}
           className="text-white bg-transparent w-[100px]"
           variant="outline">
-          Connect
+          {address ? truncate(address) : 'Connect'}
         </Button>
       </div>
     </>

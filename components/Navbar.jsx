@@ -9,7 +9,7 @@ async function Navbar() {
   return (
     <>
       <nav
-        className={`absolute top-0 right-0 left-0 m-auto z-50 bg-[#08401A] text-white`}>
+        className={`md:block hidden absolute top-0 right-0 left-0 m-auto z-50 bg-[#08401A] text-white`}>
         <div className="h-16 flex justify-between items-center container">
           <Link href="/">
             <div className="h-8 w-24 relative">
@@ -23,9 +23,9 @@ async function Navbar() {
             </div>
           </Link>
           <Navigation navLinks={navLinks} />
-          <MobileNav navLinks={navLinks} />
         </div>
       </nav>
+      <MobileNav navLinks={navLinks} />
     </>
   )
 }
