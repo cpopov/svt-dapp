@@ -22,13 +22,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
+import { useAccount } from 'wagmi'
 import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 function TradeButton({ ctaText = 'Trade' }) {
+  const { address, isConnected } = useAccount()
   const [action, setAction] = useState('')
+  const { open } = useWeb3Modal()
+  if (!address || !isConnected)
+    return (
+      <Button onClick={() => open()} className="gradient-button">
+        {ctaText}
+      </Button>
+    )
   return (
     <Dialog>
       <DialogTrigger asChild>
