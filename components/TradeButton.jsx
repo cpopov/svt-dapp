@@ -99,6 +99,7 @@ const BuySellTab = ({ action = 'buy' }) => {
   })
   const { toast } = useToast()
   function onSubmit(data, action) {
+    console.log('submit')
     toast({
       title: `You ${
         action === 'buy' ? 'bought' : 'sold'

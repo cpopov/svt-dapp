@@ -2,6 +2,7 @@ import './globals.css'
 
 import Navbar from '@/components/Navbar'
 import { Titillium_Web } from 'next/font/google'
+import { Toaster } from '@/components/ui/toaster'
 import WagmiProviderComp from '@/lib/wagmi/wagmi-provider'
 import { config } from '@/lib/wagmi/config'
 import { cookieToInitialState } from 'wagmi'
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         <WagmiProviderComp initialState={initialState}>
           <Navbar />
           {children}
+          <Toaster />
         </WagmiProviderComp>
       </body>
     </html>
