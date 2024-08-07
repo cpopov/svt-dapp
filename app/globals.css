@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* --background: 0 0% 100%; */
+    --background: 76, 30%, 97%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -12,11 +13,12 @@
     --popover-foreground: 240 10% 3.9%;
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
+    --secondary: 0, 14%, 97%, 1;
+    /* --secondary: 240 4.8% 95.9%; */
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
+    --accent: 172, 89%, 33%;
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -42,9 +44,10 @@
     --primary-foreground: 144.9 80.4% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
+    --muted: 0, 0%, 95%;
     --muted-foreground: 240 5% 64.9%;
     --accent: 12 6.5% 15.1%;
+    --accent-dark: 139, 78%, 14%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
@@ -66,6 +69,30 @@
   body {
     @apply bg-background text-foreground;
   }
+  section {
+    @apply md:mb-24 mb-14;
+  }
+  h1 {
+    @apply font-bold lg:leading-tight text-5xl md:text-6xl;
+  }
+  h2 {
+    @apply font-semibold text-4xl md:text-6xl;
+  }
+  h3 {
+    @apply font-semibold text-3xl md:text-5xl lg:leading-snug;
+  }
+  h4 {
+    @apply font-semibold text-xl sm:text-2xl md:text-3xl;
+  }
+  h5 {
+    @apply font-normal text-2xl md:text-3xl;
+  }
+  h6 {
+    @apply font-medium text-xl md:text-2xl;
+  }
+  p {
+    @apply text-base;
+  }
 }
 
 .nav-gradient {
@@ -75,12 +102,12 @@
   background: linear-gradient(90deg, #009694 25%, #65f53d 75%);
   background-size: 200% 200%;
   background-position: center;
-  transition: background 0.5s ease-in-out;
+  transition: background 0.3s ease-in-out;
 }
 
 .gradient-button:hover {
   background-position: center;
-  animation: gradientShift 0.5s ease-in-out forwards;
+  animation: gradientShift 0.3s ease-in-out forwards;
 }
 
 @keyframes gradientShift {
@@ -90,4 +117,15 @@
   100% {
     background-position: left;
   }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
