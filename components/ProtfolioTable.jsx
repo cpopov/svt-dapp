@@ -167,7 +167,7 @@ const PlayerRow = ({ player, ...props }) => (
       <PlayerCell text={player.position} />
       <PlayerCell text={`$ ${player.price}`} />
       <div className="min-w-[150px]">
-        <TradeButton className="group-hover:hover" />
+        <TradeButton data={player} className="group-hover:hover" />
       </div>
     </div>
   </div>
