@@ -100,7 +100,7 @@ const PlayerTable = () => {
 }
 
 const TableWrapper = ({ children }) => (
-  <div className="py-5">
+  <div className="py-5 w-full md:px-24">
     <h5>Players market</h5>
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-7 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
