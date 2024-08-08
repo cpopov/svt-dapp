@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import React from 'react'
+import Ticker from './Ticker'
 import TradeButton from './TradeButton'
 
 const PortfolioTable = () => {
@@ -67,12 +68,18 @@ const TableWrapper = ({ children }) => (
     <h5>Portfolio: 4 players</h5>
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-8 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
-        <RowTitle text="My Tokens" />
+        <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
+          <p className="text-sm font-semibold uppercase">My Tokens</p>
+          <Ticker />
+        </div>
         <RowTitle text="Player" colSpan={2} />
         <RowTitle text="Symbol" />
         <RowTitle text="Team" />
         <RowTitle text="Position" />
-        <RowTitle text="Price" />
+        <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
+          <p className="text-sm font-semibold uppercase">Price</p>
+          <Ticker />
+        </div>
         <RowTitle text="Action" />
       </div>
       {children}
