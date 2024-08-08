@@ -20,6 +20,7 @@ import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { Button } from '@/components/ui/button'
+import { CheckIcon } from '@radix-ui/react-icons'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { useAccount } from 'wagmi'
@@ -29,7 +30,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-function TradeButton({ ctaText = 'Trade' }) {
+function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
   const [action, setAction] = useState('')
   const { open } = useWeb3Modal()
@@ -50,7 +51,7 @@ function TradeButton({ ctaText = 'Trade' }) {
         </DialogHeader>
         <div className="grid gap-4">
           <div className="bg-muted rounded-md flex items-center gap-3 p-3">
-            <div className="relative h-12 w-12 rounded-full overflow-clip group-hover:border-accent border">
+            <div className="relative h-12 w-12 rounded-full overflow-clip border-accent border-2">
               <Image
                 src="/player_image.png"
                 className="mr-2 object-contain"
@@ -59,20 +60,20 @@ function TradeButton({ ctaText = 'Trade' }) {
               />
             </div>
             <div>
-              <p className="text-accent-dark font-semibold">Raheem Sterling</p>
+              <p className="text-accent-dark font-semibold">{data?.name}</p>
               <div className="flex text-sm font-medium gap-1 text-black/50">
-                <p>Chelsea</p>
+                <p>{data?.team}</p>
                 <p>.</p>
-                <p>Midfielder</p>
+                <p>{data?.position}</p>
               </div>
             </div>
             <div className="ml-auto">
               <p className="text-sm uppercase text-right">Price</p>
-              <p className="text-accent font-semibold">$1204</p>
+              <p className="text-accent font-semibold">${data?.price}</p>
             </div>
           </div>
           {action ? (
-            <BuySellTab {...{ action }} />
+            <BuySellTab {...{ action, data }} />
           ) : (
             <div className="flex flex-col gap-4 py-5 items-center justify-center">
               <div className="flex text-sm border rounded-full px-2 w-fit">
@@ -102,7 +103,7 @@ const FormSchema = z.object({
     .positive('Amount must be positive.')
     .min(0.01, 'Minimum amount is 0.01.')
 })
-const BuySellTab = ({ action = 'buy' }) => {
+const BuySellTab = ({ action = 'buy', data }) => {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     mode: 'onChange' // This will make validation run on every change
@@ -121,13 +122,17 @@ const BuySellTab = ({ action = 'buy' }) => {
       )
     })
   }
+  const tokenCount = Number(form.watch('amount') || 0) / data.price
+  const estimatedAmount = (
+    Number(form.watch('amount') || 0) * data.price
+  ).toFixed(2)
   return (
     <Tabs defaultValue={action} className="w-full md:px-10">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger className="" value="buy">
+      <TabsList className="grid w-fit grid-cols-2 mx-auto">
+        <TabsTrigger className="w-[80px] px-3" value="buy">
           Buy
         </TabsTrigger>
-        <TabsTrigger className="" value="sell">
+        <TabsTrigger className="w-[80px] px-3" value="sell">
           Sell
         </TabsTrigger>
       </TabsList>
@@ -141,7 +146,7 @@ const BuySellTab = ({ action = 'buy' }) => {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter Amount</FormLabel>
+                  <FormLabel>Enter amount</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -150,7 +155,9 @@ const BuySellTab = ({ action = 'buy' }) => {
                       onChange={e => field.onChange(parseFloat(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription className="text-accent">$0</FormDescription>
+                  <FormDescription className="text-accent">
+                    {tokenCount} Tokens
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -172,7 +179,7 @@ const BuySellTab = ({ action = 'buy' }) => {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter Amount</FormLabel>
+                  <FormLabel>Enter amount of tokens</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -181,11 +188,17 @@ const BuySellTab = ({ action = 'buy' }) => {
                       onChange={e => field.onChange(parseFloat(e.target.value))}
                     />
                   </FormControl>
-                  <FormDescription className="text-accent">$0</FormDescription>
+                  <FormDescription className="text-accent">
+                    $ {estimatedAmount}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
+              <p className="font-thin">Current Balance:</p>{' '}
+              <p className="font-semibold">300</p>
+            </div>
             <Button
               disabled={!form.formState.isValid}
               className="w-full"
