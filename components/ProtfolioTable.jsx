@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React from 'react'
 import TradeButton from './TradeButton'
 
-const PlayerTable = () => {
+const PortfolioTable = () => {
   const players = [
     {
       name: 'R Sterling',
@@ -14,7 +14,8 @@ const PlayerTable = () => {
       photo: '',
       tokenAddr: '0x0',
       issuerAddr: '0x0',
-      price: '0.1'
+      price: '0.1',
+      userToken: 100
     },
     {
       name: 'M Mount',
@@ -24,7 +25,8 @@ const PlayerTable = () => {
       photo: '',
       tokenAddr: '0x0',
       issuerAddr: '0x0',
-      price: '0.1'
+      price: '0.1',
+      userToken: 100
     },
     {
       name: 'K Havertz',
@@ -34,7 +36,8 @@ const PlayerTable = () => {
       photo: '',
       tokenAddr: '0x0',
       issuerAddr: '0x0',
-      price: '0.1'
+      price: '0.1',
+      userToken: 100
     },
     {
       name: 'P Porro',
@@ -44,7 +47,8 @@ const PlayerTable = () => {
       photo: '',
       tokenAddr: '0x0',
       issuerAddr: '0x0',
-      price: '0.1'
+      price: '0.1',
+      userToken: 100
     }
   ]
   return (
@@ -60,9 +64,10 @@ const PlayerTable = () => {
 
 const TableWrapper = ({ children }) => (
   <div className="py-5">
-    <h5>Players market</h5>
+    <h5>Portfolio: 4 players</h5>
     <div className="overflow-scroll scrollbar-hide">
-      <div className="grid grid-cols-7 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
+      <div className="grid grid-cols-8 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
+        <RowTitle text="My Tokens" />
         <RowTitle text="Player" colSpan={2} />
         <RowTitle text="Symbol" />
         <RowTitle text="Team" />
@@ -85,7 +90,13 @@ const PlayerRow = ({ player, ...props }) => (
   <div
     {...props}
     className="py-3 px-5 items-center min-w-[900px] group bg-white hover:bg-secondary">
-    <div className="grid grid-cols-7">
+    <div className="grid grid-cols-8">
+      <div className="min-w-[150px] col-span-1 flex items-center">
+        <p className="text-sm group-hover:text-accent font-semibold">
+          {player?.userToken}
+        </p>
+        <p className="text-xs pl-1">SVC</p>
+      </div>
       <div className="min-w-[150px] col-span-2 flex items-center">
         <div className="relative h-10 w-10 mr-2 rounded-full overflow-clip group-hover:border-accent border">
           <Image
@@ -138,4 +149,4 @@ function ErrorMessage() {
   )
 }
 
-export default PlayerTable
+export default PortfolioTable
