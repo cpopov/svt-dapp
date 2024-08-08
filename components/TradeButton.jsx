@@ -16,24 +16,61 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { Button } from '@/components/ui/button'
-import { CheckIcon } from '@radix-ui/react-icons'
+import { BookmarkIcon, CheckIcon } from '@radix-ui/react-icons'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
-import { useAccount } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import playerTokenAbi from '@/lib/abi/playerTokenAbi'
+import { ethers } from 'ethers'
+import { readContract } from '@wagmi/core'
+import { config } from '@/lib/wagmi/config'
+import { buyToken, sellToken } from '@/lib/contract-utils'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
   const [action, setAction] = useState('')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [balance, setBalance] = useState(0)
   const { open } = useWeb3Modal()
+
+  useEffect(() => {
+    const getBalance = async () => {
+      try {
+        if (ethers.isAddress(data.tokenAddr)) {
+          return await readContract(config, {
+            abi: playerTokenAbi,
+            address: data.tokenAddr,
+            functionName: 'balanceOf',
+            args: [address]
+          })
+        } else {
+          return 0
+        }
+      } catch (error) {
+        throw error
+      }
+    }
+    getBalance().then(bal => {
+      setBalance(bal)
+    })
+  }, [data.tokenAddr])
+
+  // Reset action when dialog closed
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setAction('')
+    }
+  }, [isDialogOpen])
+
   if (!address || !isConnected)
     return (
       <Button onClick={() => open()} className="gradient-button">
@@ -41,7 +78,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
       </Button>
     )
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className="gradient-button">{ctaText}</Button>
       </DialogTrigger>
@@ -73,12 +110,16 @@ function TradeButton({ data, ctaText = 'Trade' }) {
             </div>
           </div>
           {action ? (
-            <BuySellTab {...{ action, data }} />
+            <BuySellTab {...{ action, data, balance }} />
           ) : (
             <div className="flex flex-col gap-4 py-5 items-center justify-center">
               <div className="flex text-sm border rounded-full px-2 w-fit">
                 <p className="font-thin">Current Balance: </p>
-                <p className="font-semibold">300</p>
+                <p className="font-semibold ml-2">
+                  {parseFloat(ethers.formatEther(balance?.toString())).toFixed(
+                    3
+                  )}
+                </p>
               </div>
               <div className="flex gap-5">
                 <Button className="w-[100px]" onClick={() => setAction('buy')}>
@@ -97,35 +138,46 @@ function TradeButton({ data, ctaText = 'Trade' }) {
 }
 
 export default TradeButton
+
 const FormSchema = z.object({
   amount: z
     .number()
     .positive('Amount must be positive.')
     .min(0.01, 'Minimum amount is 0.01.')
 })
-const BuySellTab = ({ action = 'buy', data }) => {
+const BuySellTab = ({ action = 'buy', data, balance }) => {
+  const [isSubmit, setIsSubmit] = useState(false)
+  const { toast } = useToast()
+  const { writeContract, writeContractAsync } = useWriteContract()
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     mode: 'onChange' // This will make validation run on every change
   })
-  const { toast } = useToast()
-  function onSubmit(data, action) {
-    console.log('submit')
-    toast({
-      title: `You ${
-        action === 'buy' ? 'bought' : 'sold'
-      } the following amount:`,
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    })
+
+  const onSubmit = async (rowData, action) => {
+    setIsSubmit(true)
+    try {
+      if (action === 'buy') {
+        await buyToken(rowData.amount, data.issuerAddr)
+      } else {
+        await sellToken(rowData.amount, data.issuerAddr)
+      }
+
+      toast({
+        title: `Transaction successfully completed!`
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    setIsSubmit(false)
   }
+
   const tokenCount = Number(form.watch('amount') || 0) / data.price
   const estimatedAmount = (
     Number(form.watch('amount') || 0) * data.price
   ).toFixed(2)
+
   return (
     <Tabs defaultValue={action} className="w-full md:px-10">
       <TabsList className="grid w-fit grid-cols-2 mx-auto">
@@ -163,7 +215,7 @@ const BuySellTab = ({ action = 'buy', data }) => {
               )}
             />
             <Button
-              disabled={!form.formState.isValid}
+              disabled={!form.formState.isValid || isSubmit}
               className="w-full"
               type="submit">
               Buy
@@ -197,7 +249,9 @@ const BuySellTab = ({ action = 'buy', data }) => {
             />
             <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
               <p className="font-thin">Current Balance:</p>{' '}
-              <p className="font-semibold">300</p>
+              <p className="font-semibold ml-2">
+                {parseFloat(ethers.formatEther(balance?.toString())).toFixed(3)}
+              </p>
             </div>
             <Button
               disabled={!form.formState.isValid}

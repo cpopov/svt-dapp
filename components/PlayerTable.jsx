@@ -3,91 +3,9 @@
 import Image from 'next/image'
 import React from 'react'
 import TradeButton from './TradeButton'
+import { players } from '@/lib/players'
 
 const PlayerTable = () => {
-  const players = [
-    {
-      name: 'P Foden',
-      symbol: 'PFOD',
-      team: 'Manchester City',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'B Fernandes',
-      symbol: 'BFER',
-      team: 'Manchester United',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'T Arnold',
-      symbol: 'TARN',
-      team: 'Liverpool',
-      position: 'Defender',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'Rodri',
-      symbol: 'RODR',
-      team: 'Manchester City',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'L Diaz',
-      symbol: 'DIAZ',
-      team: 'Liverpool',
-      position: 'Forward',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'A Allister',
-      symbol: 'AALL',
-      team: 'Liverpool',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'O Watkins',
-      symbol: 'OWAT',
-      team: 'Aston Villa',
-      position: 'Forward',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    },
-    {
-      name: 'P Porro',
-      symbol: 'PPOR',
-      team: 'Totenham',
-      position: 'Defender',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1'
-    }
-  ]
-
   return (
     <TableWrapper>
       <div className="divide-y-[1px] border shadow-md">
