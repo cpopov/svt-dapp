@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button'
 import { BookmarkIcon, CheckIcon } from '@radix-ui/react-icons'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
@@ -33,7 +33,13 @@ import playerTokenAbi from '@/lib/abi/playerTokenAbi'
 import { ethers } from 'ethers'
 import { readContract } from '@wagmi/core'
 import { config } from '@/lib/wagmi/config'
-import { buyToken, sellToken } from '@/lib/contract-utils'
+import {
+  buyToken,
+  sellToken,
+  approve,
+  approvePlayerToken
+} from '@/lib/contract-utils'
+import { Loader2 } from 'lucide-react'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
@@ -110,7 +116,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
             </div>
           </div>
           {action ? (
-            <BuySellTab {...{ action, data, balance }} />
+            <BuySellTab {...{ action, data, balance, setIsDialogOpen }} />
           ) : (
             <div className="flex flex-col gap-4 py-5 items-center justify-center">
               <div className="flex text-sm border rounded-full px-2 w-fit">
@@ -145,10 +151,10 @@ const FormSchema = z.object({
     .positive('Amount must be positive.')
     .min(0.01, 'Minimum amount is 0.01.')
 })
-const BuySellTab = ({ action = 'buy', data, balance }) => {
+const BuySellTab = ({ action = 'buy', data, balance, setIsDialogOpen }) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const { toast } = useToast()
-  const { writeContract, writeContractAsync } = useWriteContract()
+  const { address } = useAccount()
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -159,11 +165,17 @@ const BuySellTab = ({ action = 'buy', data, balance }) => {
     setIsSubmit(true)
     try {
       if (action === 'buy') {
+        await approve(data.issuerAddr, rowData.amount)
         await buyToken(rowData.amount, data.issuerAddr)
       } else {
+        await approvePlayerToken(
+          data.tokenAddr,
+          data.issuerAddr,
+          rowData.amount
+        )
         await sellToken(rowData.amount, data.issuerAddr)
       }
-
+      setIsDialogOpen(false)
       toast({
         title: `Transaction successfully completed!`
       })
@@ -218,6 +230,7 @@ const BuySellTab = ({ action = 'buy', data, balance }) => {
               disabled={!form.formState.isValid || isSubmit}
               className="w-full"
               type="submit">
+              {isSubmit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Buy
             </Button>
           </form>
@@ -254,9 +267,10 @@ const BuySellTab = ({ action = 'buy', data, balance }) => {
               </p>
             </div>
             <Button
-              disabled={!form.formState.isValid}
+              disabled={!form.formState.isValid || isSubmit}
               className="w-full"
               type="submit">
+              {isSubmit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sell
             </Button>
           </form>
