@@ -23,7 +23,10 @@ import {
   approve,
   approvePlayerToken,
   buyToken,
-  sellToken
+  buyTokenAuth,
+  permitToken,
+  sellToken,
+  signIn
 } from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
@@ -40,6 +43,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { getTimestampInSeconds } from '@/lib/utils'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
