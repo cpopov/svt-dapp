@@ -35,6 +35,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import { config } from '@/lib/wagmi/config'
 import { ethers } from 'ethers'
+import { getTimestampInSeconds } from '@/lib/utils'
 import playerTokenAbi from '@/lib/abi/playerTokenAbi'
 import { readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
@@ -43,7 +44,6 @@ import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { getTimestampInSeconds } from '@/lib/utils'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
@@ -101,7 +101,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
           <div className="bg-muted rounded-md flex items-center gap-3 p-3">
             <div className="relative h-12 w-12 rounded-full overflow-clip border-accent border-2">
               <Image
-                src="/player_image.png"
+                src={data?.photo || '/player_image.png'}
                 className="mr-2 object-contain"
                 fill
                 alt=""
