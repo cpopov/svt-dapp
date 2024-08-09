@@ -46,6 +46,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
   const [action, setAction] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [balance, setBalance] = useState(0)
+  const [refresh, setRefresh] = useState(new Date())
   const { open } = useWeb3Modal()
 
   useEffect(() => {
@@ -68,7 +69,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
     getBalance().then(bal => {
       setBalance(bal)
     })
-  }, [data.tokenAddr])
+  }, [data, address, refresh])
 
   // Reset action when dialog closed
   useEffect(() => {
@@ -116,7 +117,9 @@ function TradeButton({ data, ctaText = 'Trade' }) {
             </div>
           </div>
           {action ? (
-            <BuySellTab {...{ action, data, balance, setIsDialogOpen }} />
+            <BuySellTab
+              {...{ action, data, balance, setIsDialogOpen, setRefresh }}
+            />
           ) : (
             <div className="flex flex-col gap-4 py-5 items-center justify-center">
               <div className="flex text-sm border rounded-full px-2 w-fit">
@@ -151,7 +154,13 @@ const FormSchema = z.object({
     .positive('Amount must be positive.')
     .min(0.01, 'Minimum amount is 0.01.')
 })
-const BuySellTab = ({ action = 'buy', data, balance, setIsDialogOpen }) => {
+const BuySellTab = ({
+  action = 'buy',
+  data,
+  balance,
+  setIsDialogOpen,
+  setRefresh
+}) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const { toast } = useToast()
   const { address } = useAccount()
@@ -176,6 +185,7 @@ const BuySellTab = ({ action = 'buy', data, balance, setIsDialogOpen }) => {
         await sellToken(rowData.amount, data.issuerAddr)
       }
       setIsDialogOpen(false)
+      setRefresh(new Date())
       toast({
         title: `Transaction successfully completed!`
       })
