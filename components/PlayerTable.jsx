@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import React from 'react'
+import { Skeleton } from './ui/skeleton'
 import TradeButton from './TradeButton'
 import { players } from '@/lib/players'
 
