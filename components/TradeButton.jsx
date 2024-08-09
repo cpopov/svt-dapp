@@ -1,5 +1,6 @@
 'use client'
 
+import { BookmarkIcon, CheckIcon } from '@radix-ui/react-icons'
 import {
   Dialog,
   DialogContent,
@@ -18,28 +19,27 @@ import {
 } from '@/components/ui/form'
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  approve,
+  approvePlayerToken,
+  buyToken,
+  sellToken
+} from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
-import { BookmarkIcon, CheckIcon } from '@radix-ui/react-icons'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
+import { Loader2 } from 'lucide-react'
+import { config } from '@/lib/wagmi/config'
+import { ethers } from 'ethers'
+import playerTokenAbi from '@/lib/abi/playerTokenAbi'
+import { readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import playerTokenAbi from '@/lib/abi/playerTokenAbi'
-import { ethers } from 'ethers'
-import { readContract } from '@wagmi/core'
-import { config } from '@/lib/wagmi/config'
-import {
-  buyToken,
-  sellToken,
-  approve,
-  approvePlayerToken
-} from '@/lib/contract-utils'
-import { Loader2 } from 'lucide-react'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
