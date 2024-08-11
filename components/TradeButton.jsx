@@ -76,9 +76,11 @@ function TradeButton({ data, ctaText = 'Trade' }) {
         throw error
       }
     }
-    getBalance().then(bal => {
-      setBalance(bal)
-    })
+    if (isConnected) {
+      getBalance().then(bal => {
+        setBalance(bal)
+      })
+    }
   }, [data, address, refresh])
 
   // Reset action when dialog closed
