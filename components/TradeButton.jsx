@@ -23,10 +23,11 @@ import {
   approve,
   approvePlayerToken,
   buyToken,
-  buyTokenAuth,
-  permitToken,
   sellToken,
-  signIn
+  buyTokenWithSign,
+  sellTokenWithSign,
+  buyTokenWithApprove,
+  sellTokenWithApprove
 } from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
@@ -44,6 +45,11 @@ import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Separator } from '@radix-ui/react-separator'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useEthersSigner } from '@/lib/clientToSigner'
+import { useChainId } from 'wagmi'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
@@ -156,7 +162,10 @@ const FormSchema = z.object({
   amount: z
     .number()
     .positive('Amount must be positive.')
-    .min(0.01, 'Minimum amount is 0.01.')
+    .min(0.01, 'Minimum amount is 0.01.'),
+  type: z.enum(['sign', 'approve'], {
+    required_error: 'You need to select a type.'
+  })
 })
 const BuySellTab = ({
   action = 'buy',
@@ -168,6 +177,8 @@ const BuySellTab = ({
   const [isSubmit, setIsSubmit] = useState(false)
   const { toast } = useToast()
   const { address } = useAccount()
+  const chainId = useChainId()
+  const signer = useEthersSigner({ chainId })
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -176,18 +187,40 @@ const BuySellTab = ({
 
   const onSubmit = async (rowData, action) => {
     setIsSubmit(true)
+
     try {
-      if (action === 'buy') {
-        await approve(data.issuerAddr, rowData.amount)
-        await buyToken(rowData.amount, data.issuerAddr)
+      if (rowData.type === 'sign') {
+        const deadline = getTimestampInSeconds() + 5000
+        if (action === 'buy') {
+          await buyTokenWithSign(
+            signer,
+            address,
+            data.issuerAddr,
+            rowData.amount,
+            deadline
+          )
+        } else {
+          await sellTokenWithSign(
+            signer,
+            address,
+            data.issuerAddr,
+            rowData.amount,
+            deadline,
+            data.tokenAddr
+          )
+        }
       } else {
-        await approvePlayerToken(
-          data.tokenAddr,
-          data.issuerAddr,
-          rowData.amount
-        )
-        await sellToken(rowData.amount, data.issuerAddr)
+        if (action === 'buy') {
+          await buyTokenWithApprove(rowData.amount, data.issuerAddr)
+        } else {
+          await sellTokenWithApprove(
+            rowData.amount,
+            data.issuerAddr,
+            data.tokenAddr
+          )
+        }
       }
+
       setIsDialogOpen(false)
       setRefresh(new Date())
       toast({
@@ -217,8 +250,8 @@ const BuySellTab = ({
       <Form {...form}>
         <TabsContent value="buy">
           <form
-            onSubmit={form.handleSubmit(data => onSubmit(data, 'buy'))}
-            className="space-y-6">
+            className="space-y-6"
+            onSubmit={form.handleSubmit(data => onSubmit(data, 'buy'))}>
             <FormField
               control={form.control}
               name="amount"
@@ -236,6 +269,38 @@ const BuySellTab = ({
                   <FormDescription className="text-accent">
                     {tokenCount} Tokens
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-2 gap-5 mb-5">
+                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
+                        <FormControl>
+                          <RadioGroupItem value="approve" />
+                        </FormControl>
+                        <FormLabel className="font-normal m-0 pl-3">
+                          Approve
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
+                        <FormControl>
+                          <RadioGroupItem value="sign" />
+                        </FormControl>
+                        <FormLabel className="font-normal m-0 pl-3">
+                          Sign
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -270,6 +335,38 @@ const BuySellTab = ({
                   <FormDescription className="text-accent">
                     $ {estimatedAmount}
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="grid grid-cols-2 gap-5 mb-5">
+                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
+                        <FormControl>
+                          <RadioGroupItem value="approve" />
+                        </FormControl>
+                        <FormLabel className="font-normal m-0 pl-3">
+                          Approve
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
+                        <FormControl>
+                          <RadioGroupItem value="sign" />
+                        </FormControl>
+                        <FormLabel className="font-normal m-0 pl-3">
+                          Sign
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
