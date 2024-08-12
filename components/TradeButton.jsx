@@ -92,7 +92,12 @@ function TradeButton({ data, ctaText = 'Trade' }) {
 
   if (!address || !isConnected)
     return (
-      <Button onClick={() => open()} className="gradient-button">
+      <Button
+        onClick={async () => {
+          await open()
+          setIsDialogOpen(true)
+        }}
+        className="gradient-button">
         {ctaText}
       </Button>
     )
@@ -164,10 +169,7 @@ const FormSchema = z.object({
   amount: z
     .number()
     .positive('Amount must be positive.')
-    .min(0.01, 'Minimum amount is 0.01.'),
-  type: z.enum(['sign', 'approve'], {
-    required_error: 'You need to select a type.'
-  })
+    .min(0.01, 'Minimum amount is 0.01.')
 })
 const BuySellTab = ({
   action = 'buy',
@@ -191,36 +193,24 @@ const BuySellTab = ({
     setIsSubmit(true)
 
     try {
-      if (rowData.type === 'sign') {
-        const deadline = getTimestampInSeconds() + 5000
-        if (action === 'buy') {
-          await buyTokenWithSign(
-            signer,
-            address,
-            data.issuerAddr,
-            rowData.amount,
-            deadline
-          )
-        } else {
-          await sellTokenWithSign(
-            signer,
-            address,
-            data.issuerAddr,
-            rowData.amount,
-            deadline,
-            data.tokenAddr
-          )
-        }
+      const deadline = getTimestampInSeconds() + 5000
+      if (action === 'buy') {
+        await buyTokenWithSign(
+          signer,
+          address,
+          data.issuerAddr,
+          rowData.amount,
+          deadline
+        )
       } else {
-        if (action === 'buy') {
-          await buyTokenWithApprove(rowData.amount, data.issuerAddr)
-        } else {
-          await sellTokenWithApprove(
-            rowData.amount,
-            data.issuerAddr,
-            data.tokenAddr
-          )
-        }
+        await sellTokenWithSign(
+          signer,
+          address,
+          data.issuerAddr,
+          rowData.amount,
+          deadline,
+          data.tokenAddr
+        )
       }
 
       setIsDialogOpen(false)
@@ -283,38 +273,7 @@ const BuySellTab = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="grid grid-cols-2 gap-5 mb-5">
-                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
-                        <FormControl>
-                          <RadioGroupItem value="approve" />
-                        </FormControl>
-                        <FormLabel className="font-normal m-0 pl-3">
-                          Approve
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
-                        <FormControl>
-                          <RadioGroupItem value="sign" />
-                        </FormControl>
-                        <FormLabel className="font-normal m-0 pl-3">
-                          Sign
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <Button
               disabled={!form.formState.isValid || isSubmit}
               className="w-full"
@@ -349,38 +308,7 @@ const BuySellTab = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="grid grid-cols-2 gap-5 mb-5">
-                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
-                        <FormControl>
-                          <RadioGroupItem value="approve" />
-                        </FormControl>
-                        <FormLabel className="font-normal m-0 pl-3">
-                          Approve
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex space-y-0 items-center py-3 px-4 border border-gray-200 rounded dark:border-gray-700">
-                        <FormControl>
-                          <RadioGroupItem value="sign" />
-                        </FormControl>
-                        <FormLabel className="font-normal m-0 pl-3">
-                          Sign
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
               <p className="font-thin">Current Balance:</p>{' '}
               <p className="font-semibold ml-2">
