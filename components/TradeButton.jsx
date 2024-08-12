@@ -229,7 +229,15 @@ const BuySellTab = ({
         title: `Transaction successfully completed!`
       })
     } catch (error) {
-      console.log(error)
+      if (error.message.includes('EnforcedPause')) {
+        toast({
+          variant: 'destructive',
+          title: 'Action  paused in the contract!',
+          description: 'This contract is paused at the moment'
+        })
+      } else {
+        console.log('error', error.messages)
+      }
     }
     setIsSubmit(false)
   }
