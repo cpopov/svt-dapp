@@ -5,98 +5,12 @@ import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
+import { loadPlayers } from '@/lib/players'
+import { useChainId } from 'wagmi'
 
 const PortfolioTable = () => {
-  const players = [
-    {
-      name: 'P Foden',
-      symbol: 'PFOD',
-      team: 'Manchester City',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '4821'
-    },
-    {
-      name: 'B Fernandes',
-      symbol: 'BFER',
-      team: 'Manchester United',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '7693'
-    },
-    {
-      name: 'T Arnold',
-      symbol: 'TARN',
-      team: 'Liverpool',
-      position: 'Defender',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '3245'
-    },
-    {
-      name: 'Rodri',
-      symbol: 'RODR',
-      team: 'Manchester City',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '1947'
-    },
-    {
-      name: 'L Diaz',
-      symbol: 'DIAZ',
-      team: 'Liverpool',
-      position: 'Forward',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '8362'
-    },
-    {
-      name: 'A Allister',
-      symbol: 'AALL',
-      team: 'Liverpool',
-      position: 'Midfielder',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '5738'
-    },
-    {
-      name: 'O Watkins',
-      symbol: 'OWAT',
-      team: 'Aston Villa',
-      position: 'Forward',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '2596'
-    },
-    {
-      name: 'P Porro',
-      symbol: 'PPOR',
-      team: 'Totenham',
-      position: 'Defender',
-      photo: '',
-      tokenAddr: '0x0',
-      issuerAddr: '0x0',
-      price: '0.1',
-      userToken: '4160'
-    }
-  ]
+  const chainId = useChainId()
+  const players = loadPlayers(chainId)
 
   return (
     <TableWrapper players={players}>

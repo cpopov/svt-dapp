@@ -4,9 +4,13 @@ import Image from 'next/image'
 import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import TradeButton from './TradeButton'
-import { players } from '@/lib/players'
+import { loadPlayers } from '@/lib/players'
+import { useChainId } from 'wagmi'
 
 const PlayerTable = () => {
+  const chainId = useChainId()
+  const players = loadPlayers(chainId)
+
   return (
     <TableWrapper>
       <div className="divide-y-[1px] border shadow-md">
