@@ -35,16 +35,13 @@ import { getTimestampInSeconds } from '@/lib/utils'
 import playerTokenAbi from '@/lib/abi/playerTokenAbi'
 import { readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
+import { useChainId } from 'wagmi'
+import { useEthersSigner } from '@/lib/clientToSigner'
 import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Separator } from '@radix-ui/react-separator'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useEthersSigner } from '@/lib/clientToSigner'
-import { useChainId } from 'wagmi'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
