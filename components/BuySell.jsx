@@ -111,8 +111,20 @@ const BuySell = ({
       setIsfetch(true)
       readEstimate(amount, data.issuerAddr)
         .then(values => {
-          setEstimateBuyAmount(values.previewBuy.toString())
-          setEstimateSellAmount(values.previewSell.toString())
+          setEstimateBuyAmount(
+            parseFloat(
+              ethers.formatEther(values.previewBuy?.toString())
+            ).toFixed(3)
+          )
+          if (values.previewSell) {
+            setEstimateSellAmount(
+              parseFloat(
+                ethers.formatUnits(values.previewSell?.toString(), 'mwei')
+              ).toFixed(3)
+            )
+          } else {
+            setEstimateSellAmount(0)
+          }
           setIsfetch(false)
         })
         .catch(e => {
@@ -150,7 +162,7 @@ const BuySell = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter amount</FormLabel>
+                  <FormLabel>Enter amount if USDC</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
