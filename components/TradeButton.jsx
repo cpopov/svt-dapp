@@ -20,14 +20,9 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  approve,
-  approvePlayerToken,
-  buyToken,
-  sellToken,
   buyTokenWithSign,
   sellTokenWithSign,
-  buyTokenWithApprove,
-  sellTokenWithApprove
+  readEstimate
 } from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
@@ -179,6 +174,9 @@ const BuySellTab = ({
   setRefresh
 }) => {
   const [isSubmit, setIsSubmit] = useState(false)
+  const [estimateBuyAmount, setEstimateBuyAmount] = useState(0)
+  const [estimateSellAmount, setEstimateSellAmount] = useState(0)
+  const [isfetch, setIsfetch] = useState(false)
   const { toast } = useToast()
   const { address } = useAccount()
   const chainId = useChainId()
@@ -232,6 +230,26 @@ const BuySellTab = ({
     setIsSubmit(false)
   }
 
+  useEffect(() => {
+    const amount = Number(form.watch('amount') || 0)
+    if (amount > 0) {
+      setIsfetch(true)
+      readEstimate(amount, data.issuerAddr)
+        .then(values => {
+          setEstimateBuyAmount(values.previewBuy.toString())
+          setEstimateSellAmount(values.previewSell.toString())
+          setIsfetch(false)
+        })
+        .catch(e => {
+          setEstimateBuyAmount(0)
+          setEstimateSellAmount(0)
+          setIsfetch(false)
+        })
+    } else {
+      setEstimateBuyAmount(0)
+    }
+  }, [form.watch('amount')])
+
   const tokenCount = Number(form.watch('amount') || 0) / data.price
   const estimatedAmount = (
     Number(form.watch('amount') || 0) * data.price
@@ -267,7 +285,17 @@ const BuySellTab = ({
                     />
                   </FormControl>
                   <FormDescription className="text-accent">
-                    {tokenCount} Tokens
+                    {estimateBuyAmount > 0 && (
+                      <span>
+                        You will get{' '}
+                        {isfetch ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin inline-block" />
+                        ) : (
+                          <b>{estimateBuyAmount}</b>
+                        )}{' '}
+                        (estimated) {data.name} tokens
+                      </span>
+                    )}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -302,7 +330,17 @@ const BuySellTab = ({
                     />
                   </FormControl>
                   <FormDescription className="text-accent">
-                    $ {estimatedAmount}
+                    {estimateSellAmount > 0 && (
+                      <span>
+                        You will get{' '}
+                        {isfetch ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin inline-block" />
+                        ) : (
+                          <b>{estimateSellAmount}</b>
+                        )}{' '}
+                        (estimated) USDC
+                      </span>
+                    )}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
