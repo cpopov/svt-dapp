@@ -109,7 +109,7 @@ const BuySell = ({
     const amount = Number(form.watch('amount') || 0)
     if (amount > 0) {
       setIsfetch(true)
-      readEstimate(amount, data.issuerAddr)
+      readEstimate(amount, data.issuerAddr, chainId)
         .then(values => {
           setEstimateBuyAmount(
             parseFloat(
