@@ -7,19 +7,20 @@ import TradeButton from './TradeButton'
 import { loadPlayers } from '@/lib/players'
 import { useChainId } from 'wagmi'
 
-const PlayerTable = () => {
+const PlayerTable = ({ players = [] }) => {
   const chainId = useChainId()
-  const players = loadPlayers(chainId)
-
-  return (
-    <TableWrapper>
-      <div className="divide-y-[1px] border shadow-md">
-        {players.map((player, index) => (
-          <PlayerRow key={index} player={player} />
-        ))}
-      </div>
-    </TableWrapper>
-  )
+  // const players = loadPlayers(chainId)
+  if (players.length)
+    return (
+      <TableWrapper>
+        <div className="divide-y-[1px] border shadow-md">
+          {players.map((player, index) => (
+            <PlayerRow key={index} player={player} />
+          ))}
+        </div>
+      </TableWrapper>
+    )
+  return <ErrorMessage />
 }
 
 const TableWrapper = ({ children }) => (
