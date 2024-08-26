@@ -162,7 +162,7 @@ const BuySell = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter amount if USDC</FormLabel>
+                  <FormLabel>Enter amount of USDC</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
