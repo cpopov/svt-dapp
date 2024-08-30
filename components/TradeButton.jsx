@@ -66,7 +66,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
           <div className="bg-muted rounded-md flex items-center gap-3 p-3">
             <div className="relative h-12 w-12 rounded-full overflow-clip border-accent border-2">
               <Image
-                src={data?.photo || '/player_image.png'}
+                src={data?.photo || '/player_image.jpg'}
                 className="mr-2 object-contain"
                 fill
                 alt=""
