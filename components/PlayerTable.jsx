@@ -54,7 +54,7 @@ const PlayerRow = ({ player, ...props }) => (
       <div className="min-w-[150px] col-span-2 flex items-center">
         <div className="relative h-10 w-10 mr-2 rounded-full overflow-clip group-hover:border-accent border">
           <Image
-            src={player.photo || '/player_image.png'}
+            src={player.photo || '/player_image.jpg'}
             className="mr-2 object-contain"
             fill
             alt=""

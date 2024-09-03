@@ -10,7 +10,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'livedataprod.stocksfc.com',
+        hostname: 'www.sportvalue.app',
         port: '',
         pathname: '/**'
       }
