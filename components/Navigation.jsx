@@ -1,5 +1,6 @@
 'use client'
 
+import { guestNavLinks, userNavLinks } from '@/lib/constants'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { Button } from './ui/button'
@@ -9,11 +10,11 @@ import truncate from '@/lib/truncate'
 import { useAccount } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
-function Navigation({ navLinks = [] }) {
+function Navigation() {
   const pathname = usePathname()
-  const router = useRouter()
   const { open } = useWeb3Modal()
   const { address, isConnected } = useAccount()
+  const navLinks = isConnected ? userNavLinks : guestNavLinks
   return (
     <>
       <div className="space-x-8 flex h-full">
