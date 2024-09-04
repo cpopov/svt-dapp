@@ -36,8 +36,10 @@ const BuySell = ({
   action = 'buy',
   data,
   balance,
+  balanceUsdc,
   setIsDialogOpen,
-  setRefresh
+  setRefresh,
+  setAction
 }) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [isError, setIsError] = useState(true)
@@ -101,7 +103,11 @@ const BuySell = ({
           description: 'This contract is paused at the moment'
         })
       } else {
-        console.log('error', error)
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong! Please try again',
+          description: `${error.message.slice(0, 100)}...`
+        })
       }
     }
     setIsSubmit(false)
@@ -143,11 +149,12 @@ const BuySell = ({
 
     const formattedBalance =
       action === 'buy'
-        ? ethers.formatEther(balance?.toString())
+        ? ethers.formatEther(balanceUsdc?.toString())
         : formatEth(balance, chainId)
 
     const sellError = amount > parseFloat(formattedBalance) ? true : false
     const buyError = amount > parseFloat(formattedBalance) ? true : false
+
     if (action === 'buy') {
       setIsError(buyError)
     } else {
@@ -161,7 +168,10 @@ const BuySell = ({
   ).toFixed(2)
 
   return (
-    <Tabs defaultValue={action} className="w-full md:px-10">
+    <Tabs
+      defaultValue={action}
+      className="w-full md:px-10"
+      onValueChange={value => setAction(value)}>
       <TabsList className="grid w-fit grid-cols-2 mx-auto">
         <TabsTrigger className="w-[80px] px-3" value="buy">
           Buy
@@ -210,8 +220,17 @@ const BuySell = ({
               )}
             />
 
+            <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
+              <p className="font-thin">USDC Balance:</p>{' '}
+              <p className="font-semibold ml-2">
+                {parseFloat(
+                  ethers.formatEther(balanceUsdc?.toString())
+                ).toFixed(2)}
+              </p>
+            </div>
+
             <Button
-              disabled={!form.formState.isValid || isSubmit}
+              disabled={!form.formState.isValid || isSubmit || isError}
               className="w-full"
               type="submit">
               {isSubmit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -259,7 +278,7 @@ const BuySell = ({
             />
 
             <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
-              <p className="font-thin">Current Balance:</p>{' '}
+              <p className="font-thin">Token Balance:</p>{' '}
               <p className="font-semibold ml-2">
                 {parseFloat(ethers.formatEther(balance?.toString())).toFixed(2)}
               </p>

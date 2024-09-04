@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 
 import React, { useEffect, useState } from 'react'
-import { balanceOf, balanceOfAll } from '@/lib/contract-utils'
+import { balanceOf, balanceOfUsdc } from '@/lib/contract-utils'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { ethers } from 'ethers'
@@ -22,24 +22,23 @@ function TradeButton({ data, ctaText = 'Trade' }) {
   const [action, setAction] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [balance, setBalance] = useState(0)
+  const [balanceUsdc, setBalanceUsdc] = useState(0)
   const [refresh, setRefresh] = useState(new Date())
   const { open } = useWeb3Modal()
 
   useEffect(() => {
     if (isConnected) {
-      balanceOfAll([
-        { contractAddress: data.tokenAddr, args: [address] }
-        //{ contractAddress: data.tokenAddr, address: address }
-      ])
-        .then(bal => {
-          console.log(bal)
-        })
-        .catch(e => console.log('Balance fetching: ', e))
       balanceOf(address, data.tokenAddr)
         .then(bal => {
           setBalance(bal)
         })
         .catch(e => console.log('Balance fetching: ', e))
+
+      balanceOfUsdc(address, data.tokenAddr)
+        .then(bal => {
+          setBalanceUsdc(bal)
+        })
+        .catch(e => console.log('Balance fetching usdc: ', e))
     }
   }, [data, address, refresh])
 
@@ -95,7 +94,15 @@ function TradeButton({ data, ctaText = 'Trade' }) {
           </div>
           {action ? (
             <BuySell
-              {...{ action, data, balance, setIsDialogOpen, setRefresh }}
+              {...{
+                action,
+                data,
+                balance,
+                setIsDialogOpen,
+                setRefresh,
+                setAction,
+                balanceUsdc
+              }}
             />
           ) : (
             <div className="flex flex-col gap-4 py-5 items-center justify-center">
