@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 
 import React, { useEffect, useState } from 'react'
-import { balanceOf } from '@/lib/contract-utils'
+import { balanceOf, balanceOfAll } from '@/lib/contract-utils'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { ethers } from 'ethers'
@@ -27,6 +27,14 @@ function TradeButton({ data, ctaText = 'Trade' }) {
 
   useEffect(() => {
     if (isConnected) {
+      balanceOfAll([
+        { contractAddress: data.tokenAddr, args: [address] }
+        //{ contractAddress: data.tokenAddr, address: address }
+      ])
+        .then(bal => {
+          console.log(bal)
+        })
+        .catch(e => console.log('Balance fetching: ', e))
       balanceOf(address, data.tokenAddr)
         .then(bal => {
           setBalance(bal)

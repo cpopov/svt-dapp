@@ -14,7 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   buyTokenWithSign,
   sellTokenWithSign,
-  readEstimate
+  readEstimate,
+  formatEth
 } from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
@@ -39,6 +40,7 @@ const BuySell = ({
   setRefresh
 }) => {
   const [isSubmit, setIsSubmit] = useState(false)
+  const [isError, setIsError] = useState(true)
   const [estimateBuyAmount, setEstimateBuyAmount] = useState(0)
   const [estimateSellAmount, setEstimateSellAmount] = useState(0)
   const [isfetch, setIsfetch] = useState(false)
@@ -107,6 +109,7 @@ const BuySell = ({
 
   useEffect(() => {
     const amount = Number(form.watch('amount') || 0)
+
     if (amount > 0) {
       setIsfetch(true)
       readEstimate(amount, data.issuerAddr, chainId)
@@ -118,9 +121,7 @@ const BuySell = ({
           )
           if (values.previewSell) {
             setEstimateSellAmount(
-              parseFloat(
-                ethers.formatUnits(values.previewSell?.toString(), 'mwei')
-              ).toFixed(3)
+              parseFloat(formatEth(values.previewSell, chainId)).toFixed(3)
             )
           } else {
             setEstimateSellAmount(0)
@@ -136,6 +137,23 @@ const BuySell = ({
       setEstimateBuyAmount(0)
     }
   }, [form.watch('amount')])
+
+  useEffect(() => {
+    const amount = Number(form.watch('amount') || 0)
+
+    const formattedBalance =
+      action === 'buy'
+        ? ethers.formatEther(balance?.toString())
+        : formatEth(balance, chainId)
+
+    const sellError = amount > parseFloat(formattedBalance) ? true : false
+    const buyError = amount > parseFloat(formattedBalance) ? true : false
+    if (action === 'buy') {
+      setIsError(buyError)
+    } else {
+      setIsError(sellError)
+    }
+  }, [form.watch('amount'), balance])
 
   const tokenCount = Number(form.watch('amount') || 0) / data.price
   const estimatedAmount = (
@@ -243,11 +261,11 @@ const BuySell = ({
             <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
               <p className="font-thin">Current Balance:</p>{' '}
               <p className="font-semibold ml-2">
-                {parseFloat(ethers.formatEther(balance?.toString())).toFixed(3)}
+                {parseFloat(ethers.formatEther(balance?.toString())).toFixed(2)}
               </p>
             </div>
             <Button
-              disabled={!form.formState.isValid || isSubmit}
+              disabled={!form.formState.isValid || isSubmit || isError}
               className="w-full"
               type="submit">
               {isSubmit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
