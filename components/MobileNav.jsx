@@ -1,15 +1,20 @@
 'use client'
 
 import React, { useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { guestNavLinks, userNavLinks } from '@/lib/constants'
 
+import { Button } from './ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
+import truncate from '@/lib/truncate'
+import { useAccount } from 'wagmi'
+import { usePathname } from 'next/navigation'
 
-function MobileNav({ navLinks = [] }) {
+function MobileNav() {
+  const { address, isConnected } = useAccount()
   const pathname = usePathname()
-  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+  const navLinks = isConnected ? userNavLinks : guestNavLinks
 
   return (
     <nav className="md:hidden block z-10 absolute top-0 right-0 left-0 m-auto bg-[#08401A] text-white">
@@ -74,6 +79,12 @@ function MobileNav({ navLinks = [] }) {
                 {title}
               </Link>
             ))}
+            <Button
+              onClick={() => open()}
+              className="text-white bg-transparent w-[100px]"
+              variant="outline">
+              {address ? truncate(address) : 'Connect'}
+            </Button>
           </div>
         </div>
       </div>

@@ -1,16 +1,35 @@
 'use client'
 
+import React, { useEffect, useState } from 'react'
+import { useAccount, useChainId } from 'wagmi'
+
 import Image from 'next/image'
-import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
+import { getUserPortfolio } from '@/actions'
 import { loadPlayers } from '@/lib/players'
-import { useChainId } from 'wagmi'
 
 const PortfolioTable = () => {
   const chainId = useChainId()
-  const players = loadPlayers(chainId)
+  // const players = loadPlayers(chainId)
+  const [players, setPlayers] = useState(null)
+  const { address } = useAccount()
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        let { data } = await getUserPortfolio(address)
+        setPlayers(data?.tokens)
+      } catch (error) {
+        setPlayers([])
+      }
+    }
+    fetchPosts()
+  }, [])
+
+  if (!players) return <Loader />
+  if (players?.length === 0) return <ErrorMessage />
 
   return (
     <TableWrapper players={players}>
@@ -25,7 +44,7 @@ const PortfolioTable = () => {
 
 const TableWrapper = ({ children, players }) => (
   <div className="py-5 w-full md:px-24">
-    <h5>{`Portfolio: ${players?.length} players`}</h5>
+    <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-8 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
         <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
@@ -60,7 +79,7 @@ const PlayerRow = ({ player, ...props }) => (
     <div className="grid grid-cols-8">
       <div className="min-w-[150px] col-span-1 flex items-center">
         <p className="text-sm group-hover:text-accent font-semibold">
-          {player?.userToken}
+          {Number(player?.amount)?.toFixed(4)}
         </p>
         <p className="text-xs pl-1"></p>
       </div>
@@ -94,14 +113,18 @@ const PlayerCell = ({ text, colSpan = 1, className = '' }) => (
   </div>
 )
 
-function Loader({ length = 3 }) {
+function Loader({ length = 1 }) {
   return (
     <TableWrapper>
-      {[...Array(length)].map((_, index) => (
-        <React.Fragment key={index}>
-          <Skeleton className="w-full h-20" />
-        </React.Fragment>
-      ))}
+      <div className="divide-y-2">
+        {[...Array(length)].map((_, index) => (
+          <React.Fragment key={index}>
+            <Skeleton className="w-full h-20 flex items-center justify-center">
+              Loading...
+            </Skeleton>
+          </React.Fragment>
+        ))}
+      </div>
     </TableWrapper>
   )
 }

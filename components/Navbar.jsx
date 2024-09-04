@@ -2,10 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import MobileNav from './MobileNav'
 import Navigation from './Navigation'
-import { userNavLinks } from '@/lib/constants'
 
 async function Navbar() {
-  const navLinks = userNavLinks
   return (
     <>
       <nav
@@ -22,10 +20,10 @@ async function Navbar() {
               />
             </div>
           </Link>
-          <Navigation navLinks={navLinks} />
+          <Navigation />
         </div>
       </nav>
-      <MobileNav navLinks={navLinks} />
+      <MobileNav />
     </>
   )
 }
