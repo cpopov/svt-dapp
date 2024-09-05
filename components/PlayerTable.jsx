@@ -4,12 +4,8 @@ import Image from 'next/image'
 import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import TradeButton from './TradeButton'
-import { loadPlayers } from '@/lib/players'
-import { useChainId } from 'wagmi'
 
 const PlayerTable = ({ players = [] }) => {
-  const chainId = useChainId()
-  // const players = loadPlayers(chainId)
   if (players.length)
     return (
       <TableWrapper>
