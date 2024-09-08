@@ -1,18 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useAccount, useChainId } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 import Image from 'next/image'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
 import { getUserPortfolio } from '@/actions'
-import { loadPlayers } from '@/lib/players'
 
 const PortfolioTable = () => {
-  const chainId = useChainId()
-  // const players = loadPlayers(chainId)
   const [players, setPlayers] = useState(null)
   const { address } = useAccount()
 
@@ -20,6 +17,7 @@ const PortfolioTable = () => {
     async function fetchPosts() {
       try {
         let { data } = await getUserPortfolio(address)
+        console.log('PortfolioTable(), loaded data:', data)
         setPlayers(data?.tokens)
       } catch (error) {
         setPlayers([])

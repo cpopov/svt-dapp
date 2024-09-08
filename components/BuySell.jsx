@@ -15,7 +15,9 @@ import {
   buyTokenWithSign,
   sellTokenWithSign,
   readEstimate,
-  formatEth
+  formatUSDC,
+  formatToken,
+  usdcAddress
 } from '@/lib/contract-utils'
 
 import { Button } from '@/components/ui/button'
@@ -30,7 +32,6 @@ import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loadContract } from '@/lib/contract-address'
 
 const BuySell = ({
   action = 'buy',
@@ -121,13 +122,11 @@ const BuySell = ({
       readEstimate(amount, data.issuerAddr, chainId)
         .then(values => {
           setEstimateBuyAmount(
-            parseFloat(
-              ethers.formatEther(values.previewBuy?.toString())
-            ).toFixed(3)
+            parseFloat(formatToken(values.previewBuy?.toString())).toFixed(3)
           )
           if (values.previewSell) {
             setEstimateSellAmount(
-              parseFloat(formatEth(values.previewSell, chainId)).toFixed(3)
+              parseFloat(formatUSDC(values.previewSell, chainId)).toFixed(3)
             )
           } else {
             setEstimateSellAmount(0)
@@ -148,7 +147,13 @@ const BuySell = ({
     const amount = Number(form.watch('amount') || 0)
 
     const formattedBalance =
+<<<<<<< HEAD
       action === 'buy' ? formatEth(balanceUsdc) : ethers.formatEther(balance)
+=======
+      action === 'buy'
+        ? ethers.formatEther(balanceUsdc?.toString())
+        : formatUSDC(balance)
+>>>>>>> 0fa49caba419ccce79542ab844806777a66b8eec
 
     const sellError = amount > parseFloat(formattedBalance) ? true : false
     const buyError = amount > parseFloat(formattedBalance) ? true : false

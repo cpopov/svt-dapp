@@ -1,4 +1,4 @@
-import PortfolioTable from '@/components/ProtfolioTable'
+import PortfolioTable from '@/components/PortfolioTable'
 
 export const metadata = {
   title: 'Portfolio'
