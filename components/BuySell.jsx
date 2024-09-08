@@ -147,13 +147,7 @@ const BuySell = ({
     const amount = Number(form.watch('amount') || 0)
 
     const formattedBalance =
-<<<<<<< HEAD
       action === 'buy' ? formatEth(balanceUsdc) : ethers.formatEther(balance)
-=======
-      action === 'buy'
-        ? ethers.formatEther(balanceUsdc?.toString())
-        : formatUSDC(balance)
->>>>>>> 0fa49caba419ccce79542ab844806777a66b8eec
 
     const sellError = amount > parseFloat(formattedBalance) ? true : false
     const buyError = amount > parseFloat(formattedBalance) ? true : false
