@@ -34,7 +34,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
         })
         .catch(e => console.log('Balance fetching: ', e))
 
-      balanceOfUsdc(address, data.tokenAddr)
+      balanceOfUsdc(address)
         .then(bal => {
           setBalanceUsdc(bal)
         })
