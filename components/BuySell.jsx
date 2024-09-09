@@ -122,6 +122,8 @@ const BuySell = ({
       setIsfetch(true)
       readEstimate(amount, data.issuerAddr, chainId)
         .then(values => {
+          console.log(values)
+
           setEstimateBuyAmount(
             parseFloat(formatToken(values.previewBuy?.toString())).toFixed(3)
           )
