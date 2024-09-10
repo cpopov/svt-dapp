@@ -15,6 +15,9 @@ import {
   buyTokenWithSign,
   sellTokenWithSign,
   readEstimate,
+  formatUSDC,
+  formatToken,
+  usdcAddress,
   formatEth
 } from '@/lib/contract-utils'
 
@@ -30,7 +33,6 @@ import { useForm } from 'react-hook-form'
 import { useToast } from '@/components/ui/use-toast'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loadContract } from '@/lib/contract-address'
 
 const BuySell = ({
   action = 'buy',
@@ -42,7 +44,7 @@ const BuySell = ({
   setAction
 }) => {
   const [isSubmit, setIsSubmit] = useState(false)
-  const [isError, setIsError] = useState(true)
+  const [isError, setIsError] = useState(false)
   const [estimateBuyAmount, setEstimateBuyAmount] = useState(0)
   const [estimateSellAmount, setEstimateSellAmount] = useState(0)
   const [isfetch, setIsfetch] = useState(false)
@@ -50,7 +52,6 @@ const BuySell = ({
   const { address } = useAccount()
   const chainId = useChainId()
   const signer = useEthersSigner({ chainId })
-  const contracts = loadContract(chainId)
 
   const FormSchema = z.object({
     amount: z
@@ -75,7 +76,6 @@ const BuySell = ({
           data.issuerAddr,
           rowData.amount,
           deadline,
-          contracts.usdc,
           chainId
         )
       } else {
@@ -96,6 +96,8 @@ const BuySell = ({
         title: `Transaction successfully completed!`
       })
     } catch (error) {
+      console.log(error.message)
+
       if (error.message.includes('EnforcedPause')) {
         toast({
           variant: 'destructive',
@@ -120,14 +122,14 @@ const BuySell = ({
       setIsfetch(true)
       readEstimate(amount, data.issuerAddr, chainId)
         .then(values => {
+          console.log(values)
+
           setEstimateBuyAmount(
-            parseFloat(
-              ethers.formatEther(values.previewBuy?.toString())
-            ).toFixed(3)
+            parseFloat(formatToken(values.previewBuy?.toString())).toFixed(3)
           )
           if (values.previewSell) {
             setEstimateSellAmount(
-              parseFloat(formatEth(values.previewSell, chainId)).toFixed(3)
+              parseFloat(formatUSDC(values.previewSell, chainId)).toFixed(3)
             )
           } else {
             setEstimateSellAmount(0)
@@ -148,9 +150,7 @@ const BuySell = ({
     const amount = Number(form.watch('amount') || 0)
 
     const formattedBalance =
-      action === 'buy'
-        ? ethers.formatEther(balanceUsdc?.toString())
-        : formatEth(balance, chainId)
+      action === 'buy' ? formatEth(balanceUsdc) : ethers.formatEther(balance)
 
     const sellError = amount > parseFloat(formattedBalance) ? true : false
     const buyError = amount > parseFloat(formattedBalance) ? true : false
@@ -161,11 +161,6 @@ const BuySell = ({
       setIsError(sellError)
     }
   }, [form.watch('amount'), balance])
-
-  const tokenCount = Number(form.watch('amount') || 0) / data.price
-  const estimatedAmount = (
-    Number(form.watch('amount') || 0) * data.price
-  ).toFixed(2)
 
   return (
     <Tabs
@@ -223,9 +218,7 @@ const BuySell = ({
             <div className="flex text-sm border rounded-full px-2 w-fit mx-auto">
               <p className="font-thin">USDC Balance:</p>{' '}
               <p className="font-semibold ml-2">
-                {parseFloat(
-                  ethers.formatEther(balanceUsdc?.toString())
-                ).toFixed(2)}
+                {parseFloat(formatEth(balanceUsdc?.toString())).toFixed(2)}
               </p>
             </div>
 
