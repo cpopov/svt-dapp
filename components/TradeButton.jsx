@@ -7,15 +7,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-
 import React, { useEffect, useState } from 'react'
 import { balanceOf, balanceOfUsdc } from '@/lib/contract-utils'
+
 import { Button } from '@/components/ui/button'
+import BuySell from '@/components/BuySell'
 import Image from 'next/image'
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
-import BuySell from '@/components/BuySell'
 
 function TradeButton({ data, ctaText = 'Trade' }) {
   const { address, isConnected } = useAccount()
@@ -63,7 +63,7 @@ function TradeButton({ data, ctaText = 'Trade' }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="gradient-button">{ctaText}</Button>
+        <Button className="gradient-button my-auto">{ctaText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
