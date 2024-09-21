@@ -9,11 +9,13 @@ import Link from 'next/link'
 import truncate from '@/lib/truncate'
 import { useAccount } from 'wagmi'
 import { usePathname } from 'next/navigation'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 
 function MobileNav() {
   const { address, isConnected } = useAccount()
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const { open } = useWeb3Modal()
   const navLinks = isConnected ? userNavLinks : guestNavLinks
 
   return (

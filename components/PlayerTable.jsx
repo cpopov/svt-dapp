@@ -4,6 +4,7 @@ import Image from 'next/image'
 import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import TradeButton from './TradeButton'
+import { cn } from '@/lib/utils'
 
 const PlayerTable = ({ players = [] }) => {
   if (players.length)
@@ -23,21 +24,21 @@ const TableWrapper = ({ children }) => (
   <div className="py-5 w-full md:px-24">
     <h5>Players market</h5>
     <div className="overflow-scroll scrollbar-hide">
-      <div className="grid grid-cols-7 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
-        <RowTitle text="Player" colSpan={2} />
+      <div className="grid grid-cols-7 pl-5 py-3 min-w-[750px] bg-[#DDEDE7] mt-10 overflow-clip">
+        <RowTitle text="Player" className="col-span-2" />
         <RowTitle text="Symbol" />
         <RowTitle text="Team" />
         <RowTitle text="Position" />
         <RowTitle text="Price" />
-        <RowTitle text="Action" />
+        <RowTitle text="Action" className="sticky right-0 bg-[#DDEDE7] pl-3" />
       </div>
       {children}
     </div>
   </div>
 )
 
-const RowTitle = ({ text, colSpan = 1 }) => (
-  <div className={`min-w-[150px] col-span-${colSpan}`}>
+const RowTitle = ({ text, className }) => (
+  <div className={cn(`md:min-w-[150px] col-span-1`, className)}>
     <p className="text-sm font-semibold uppercase">{text}</p>
   </div>
 )
@@ -45,9 +46,9 @@ const RowTitle = ({ text, colSpan = 1 }) => (
 const PlayerRow = ({ player, ...props }) => (
   <div
     {...props}
-    className="py-3 px-5 items-center min-w-[900px] group bg-white hover:bg-secondary">
-    <div className="grid grid-cols-7">
-      <div className="min-w-[150px] col-span-2 flex items-center">
+    className="pl-5 items-center min-w-[750px] group bg-white hover:bg-secondary">
+    <div className="grid grid-cols-7 overflow-clip">
+      <div className="md:min-w-[150px] col-span-2 flex items-center py-3">
         <div className="relative h-10 w-10 mr-2 rounded-full overflow-clip group-hover:border-accent border">
           <Image
             src={player.photo || '/player_image.jpg'}
@@ -64,15 +65,19 @@ const PlayerRow = ({ player, ...props }) => (
       <PlayerCell text={player.team} />
       <PlayerCell text={player.position} />
       <PlayerCell text={`$ ${player.price}`} />
-      <div className="min-w-[150px]">
-        <TradeButton data={player} className="group-hover:hover" />
+      <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
+        <TradeButton data={player} />
       </div>
     </div>
   </div>
 )
 
-const PlayerCell = ({ text, colSpan = 1, className = '' }) => (
-  <div className={`min-w-[150px] col-span-${colSpan} flex items-center`}>
+const PlayerCell = ({ text, className = '' }) => (
+  <div
+    className={cn(
+      `md:min-w-[150px] col-span-1 flex items-center py-3`,
+      className
+    )}>
     <p className={`text-sm font-medium ${className}`}>{text}</p>
   </div>
 )
