@@ -22,7 +22,7 @@ const PlayerTable = ({ players = [] }) => {
 
 const TableWrapper = ({ children }) => (
   <div className="md:py-5 w-full md:px-24">
-    <h5>Players market</h5>
+    {/* <h5>Players market</h5> */}
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-7 pl-5 py-3 min-w-[750px] bg-[#DDEDE7] mt-5 md:mt-10 overflow-clip">
         <RowTitle text="Player" className="col-span-2" />
