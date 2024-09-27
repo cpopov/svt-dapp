@@ -7,6 +7,7 @@ import WagmiProviderComp from '@/lib/wagmi/wagmi-provider'
 import { config } from '@/lib/wagmi/config'
 import { cookieToInitialState } from 'wagmi'
 import { headers } from 'next/headers'
+import { GoogleTagManager } from '@next/third-parties/google'
 
 const titillium = Titillium_Web({
   weight: ['200', '300', '400', '600', '700', '900'],
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={titillium.className}>
+        <GoogleTagManager gtmId="G-CEVR6KG66W" />
         <WagmiProviderComp initialState={initialState}>
           <Navbar />
           {children}
