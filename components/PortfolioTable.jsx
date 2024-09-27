@@ -78,7 +78,7 @@ const PlayerRow = ({ player, ...props }) => (
     <div className="grid grid-cols-8">
       <div className="min-w-[150px] col-span-1 flex items-center py-3">
         <p className="text-sm group-hover:text-accent font-semibold">
-          {Number(player?.amount)?.toFixed(4)}
+          {Number(player?.amount)?.toFixed(2)}
         </p>
         <p className="text-xs pl-1"></p>
       </div>
