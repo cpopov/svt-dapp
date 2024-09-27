@@ -42,7 +42,7 @@ const PortfolioTable = () => {
 }
 
 const TableWrapper = ({ children, players }) => (
-  <div className="md:py-5 w-full md:px-24">
+  <div className="md:py-5 w-full md:w-fit">
     <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-8 pl-5 py-3 md:mt-10 mt-5 min-w-[800px] bg-[#DDEDE7] ">
