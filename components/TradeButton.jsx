@@ -25,7 +25,6 @@ function TradeButton({ data, ctaText = 'Trade' }) {
   const [balanceUsdc, setBalanceUsdc] = useState(0)
   const [refresh, setRefresh] = useState(new Date())
   const { open } = useWeb3Modal()
-
   useEffect(() => {
     if (isConnected) {
       balanceOf(address, data.tokenAddr)
@@ -80,7 +79,10 @@ function TradeButton({ data, ctaText = 'Trade' }) {
               />
             </div>
             <div>
-              <p className="text-accent-dark font-semibold">{data?.name}</p>
+              <p className="text-accent-dark font-semibold">
+                {data?.name}
+                <span className="text-black/50">{` (${data?.symbol})`}</span>
+              </p>
               <div className="flex text-sm font-medium gap-1 text-black/50">
                 <p>{data?.team}</p>
                 <p>.</p>

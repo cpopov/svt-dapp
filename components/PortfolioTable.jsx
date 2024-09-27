@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
 
 import Image from 'next/image'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
+import { cn } from '@/lib/utils'
 import { getUserPortfolio } from '@/actions'
+import { useAccount } from 'wagmi'
 
 const PortfolioTable = () => {
   const [players, setPlayers] = useState(null)
@@ -41,15 +42,15 @@ const PortfolioTable = () => {
 }
 
 const TableWrapper = ({ children, players }) => (
-  <div className="py-5 w-full md:px-24">
+  <div className="md:py-5 w-full md:px-24">
     <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
     <div className="overflow-scroll scrollbar-hide">
-      <div className="grid grid-cols-8 px-5 py-3 min-w-[900px] bg-[#DDEDE7] mt-10">
+      <div className="grid grid-cols-8 pl-5 py-3 md:mt-10 mt-5 min-w-[800px] bg-[#DDEDE7] ">
         <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
           <p className="text-sm font-semibold uppercase">My Tokens</p>
           <Ticker />
         </div>
-        <RowTitle text="Player" colSpan={2} />
+        <RowTitle text="Player" className="col-span-2" />
         <RowTitle text="Symbol" />
         <RowTitle text="Team" />
         <RowTitle text="Position" />
@@ -57,15 +58,15 @@ const TableWrapper = ({ children, players }) => (
           <p className="text-sm font-semibold uppercase">Price</p>
           <Ticker />
         </div>
-        <RowTitle text="Action" />
+        <RowTitle text="Action" className="sticky right-0 bg-[#DDEDE7] pl-3" />
       </div>
       {children}
     </div>
   </div>
 )
 
-const RowTitle = ({ text, colSpan = 1 }) => (
-  <div className={`min-w-[150px] col-span-${colSpan}`}>
+const RowTitle = ({ text, className }) => (
+  <div className={cn(`md:min-w-[150px] col-span-1`, className)}>
     <p className="text-sm font-semibold uppercase">{text}</p>
   </div>
 )
@@ -73,9 +74,9 @@ const RowTitle = ({ text, colSpan = 1 }) => (
 const PlayerRow = ({ player, ...props }) => (
   <div
     {...props}
-    className="py-3 px-5 items-center min-w-[900px] group bg-white hover:bg-secondary">
+    className="pl-5 items-center min-w-[800px] group bg-white hover:bg-secondary">
     <div className="grid grid-cols-8">
-      <div className="min-w-[150px] col-span-1 flex items-center">
+      <div className="min-w-[150px] col-span-1 flex items-center py-3">
         <p className="text-sm group-hover:text-accent font-semibold">
           {Number(player?.amount)?.toFixed(4)}
         </p>
@@ -98,7 +99,7 @@ const PlayerRow = ({ player, ...props }) => (
       <PlayerCell text={player.team} />
       <PlayerCell text={player.position} />
       <PlayerCell text={`$ ${player.price}`} />
-      <div className="min-w-[150px]">
+      <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
         <TradeButton data={player} className="group-hover:hover" />
       </div>
     </div>
