@@ -17,7 +17,15 @@ import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
-function TradeButton({ data, ctaText = 'Trade' }) {
+function TradeButton({ data, ctaText = 'TRADE' }) {
+  const cta =
+    data.status === 'unlisted' || undefined
+      ? 'PRE SALE'
+      : data?.paused
+      ? 'PAUSED'
+      : ctaText
+  const isDisabled =
+    data.status === 'unlisted' || undefined ? true : data?.paused ? true : false
   const { address, isConnected } = useAccount()
   const [action, setAction] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -51,18 +59,21 @@ function TradeButton({ data, ctaText = 'Trade' }) {
   if (!address || !isConnected)
     return (
       <Button
+        disabled={isDisabled}
         onClick={async () => {
           await open()
           setIsDialogOpen(true)
         }}
-        className="gradient-button">
-        {ctaText}
+        className="gradient-button w-20">
+        {cta}
       </Button>
     )
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="gradient-button my-auto">{ctaText}</Button>
+        <Button disabled={isDisabled} className="gradient-button my-auto w-20">
+          {cta}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
