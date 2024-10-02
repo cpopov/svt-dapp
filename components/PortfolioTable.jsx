@@ -42,7 +42,7 @@ const PortfolioTable = () => {
 }
 
 const TableWrapper = ({ children, players }) => (
-  <div className="md:py-5 w-full md:px-24">
+  <div className="md:py-5 w-full md:w-fit">
     <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-8 pl-5 py-3 md:mt-10 mt-5 min-w-[800px] bg-[#DDEDE7] ">
@@ -78,7 +78,7 @@ const PlayerRow = ({ player, ...props }) => (
     <div className="grid grid-cols-8">
       <div className="min-w-[150px] col-span-1 flex items-center py-3">
         <p className="text-sm group-hover:text-accent font-semibold">
-          {Number(player?.amount)?.toFixed(4)}
+          {Number(player?.amount)?.toFixed(2)}
         </p>
         <p className="text-xs pl-1"></p>
       </div>
@@ -98,7 +98,7 @@ const PlayerRow = ({ player, ...props }) => (
       <PlayerCell text={player.symbol} />
       <PlayerCell text={player.team} />
       <PlayerCell text={player.position} />
-      <PlayerCell text={`$ ${player.price}`} />
+      <PlayerCell text={player?.price ? `$ ${player?.price}` : ''} />
       <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
         <TradeButton data={player} className="group-hover:hover" />
       </div>

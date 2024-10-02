@@ -21,7 +21,7 @@ const PlayerTable = ({ players = [] }) => {
 }
 
 const TableWrapper = ({ children }) => (
-  <div className="md:py-5 w-full md:px-24">
+  <div className="md:py-5 w-full md:w-fit">
     {/* <h5>Players market</h5> */}
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-7 pl-5 py-3 min-w-[750px] bg-[#DDEDE7] mt-5 md:mt-10 overflow-clip">
@@ -61,10 +61,10 @@ const PlayerRow = ({ player, ...props }) => (
           {player.name}
         </p>
       </div>
-      <PlayerCell text={player.symbol} />
-      <PlayerCell text={player.team} />
-      <PlayerCell text={player.position} />
-      <PlayerCell text={`$ ${player.price}`} />
+      <PlayerCell text={player?.symbol} />
+      <PlayerCell text={player?.team} />
+      <PlayerCell text={player?.position} />
+      <PlayerCell text={player?.price ? `$ ${player?.price}` : ''} />
       <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
         <TradeButton data={player} />
       </div>
