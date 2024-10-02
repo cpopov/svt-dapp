@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={titillium.className}>
-        <GoogleTagManager gtmId="G-CEVR6KG66W" />
+        <GoogleTagManager gtmId="G-2LQSX91QWM" />
         <WagmiProviderComp initialState={initialState}>
           <Navbar />
           {children}
