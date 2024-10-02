@@ -98,7 +98,7 @@ const PlayerRow = ({ player, ...props }) => (
       <PlayerCell text={player.symbol} />
       <PlayerCell text={player.team} />
       <PlayerCell text={player.position} />
-      <PlayerCell text={`$ ${player.price}`} />
+      <PlayerCell text={player?.price ? `$ ${player?.price}` : ''} />
       <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
         <TradeButton data={player} className="group-hover:hover" />
       </div>
