@@ -3,13 +3,14 @@
 import Image from 'next/image'
 import React from 'react'
 import { Skeleton } from './ui/skeleton'
+import Ticker from './Ticker'
 import TradeButton from './TradeButton'
 import { cn } from '@/lib/utils'
 
-const PlayerTable = ({ players = [] }) => {
+const PlayerTable = ({ players = [], onSort, sortBy, sortDirection }) => {
   if (players.length)
     return (
-      <TableWrapper>
+      <TableWrapper {...{ onSort, sortBy, sortDirection }}>
         <div className="divide-y-[1px] border shadow-md">
           {players.map((player, index) => (
             <PlayerRow key={index} player={player} />
@@ -19,27 +20,52 @@ const PlayerTable = ({ players = [] }) => {
     )
   return <ErrorMessage />
 }
+const renderSortArrow = (criteria, sortBy, sortDirection) => {
+  if (sortBy === criteria) {
+    return sortDirection === 'asc' ? (
+      <Ticker className="rotate-180 duration-300" />
+    ) : (
+      <Ticker className="duration-300" />
+    )
+  }
+  return <Ticker fill="#778899" className="duration-300" />
+}
 
-const TableWrapper = ({ children }) => (
+const TableWrapper = ({ children, onSort, sortBy, sortDirection }) => (
   <div className="md:py-5 w-full md:w-fit">
     {/* <h5>Players market</h5> */}
     <div className="overflow-scroll scrollbar-hide">
       <div className="grid grid-cols-7 pl-5 py-3 min-w-[750px] bg-[#DDEDE7] mt-5 md:mt-10 overflow-clip">
-        <RowTitle text="Player" className="col-span-2" />
-        <RowTitle text="Symbol" />
-        <RowTitle text="Team" />
-        <RowTitle text="Position" />
-        <RowTitle text="Price" />
-        <RowTitle text="Action" className="sticky right-0 bg-[#DDEDE7] pl-3" />
+        <RowTitle
+          role="button"
+          onClick={() => onSort('name')}
+          className="col-span-2">
+          <div className="flex items-center gap-1">
+            Player {renderSortArrow('name', sortBy, sortDirection)}
+          </div>
+        </RowTitle>
+        <RowTitle>Symbol</RowTitle>
+        <RowTitle role="button" onClick={() => onSort('team')}>
+          <div className="flex items-center gap-1">
+            Team {renderSortArrow('team', sortBy, sortDirection)}
+          </div>
+        </RowTitle>
+        <RowTitle>Position</RowTitle>
+        <RowTitle role="button" onClick={() => onSort('price')}>
+          <div className="flex items-center gap-1">
+            Price {renderSortArrow('price', sortBy, sortDirection)}
+          </div>
+        </RowTitle>
+        <RowTitle className="sticky right-0 bg-[#DDEDE7] pl-3">Action</RowTitle>
       </div>
       {children}
     </div>
   </div>
 )
 
-const RowTitle = ({ text, className }) => (
-  <div className={cn(`md:min-w-[150px] col-span-1`, className)}>
-    <p className="text-sm font-semibold uppercase">{text}</p>
+const RowTitle = ({ children, className, ...props }) => (
+  <div {...props} className={cn(`md:min-w-[150px] col-span-1`, className)}>
+    <div className="text-sm font-semibold uppercase">{children}</div>
   </div>
 )
 
