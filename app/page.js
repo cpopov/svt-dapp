@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import Filter from '@/components/Filter'
 import PlayerTable from '@/components/PlayerTable'
 import { getPlayersList } from '@/actions'
 
@@ -32,8 +33,11 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col py-24 container">
-      <div className="py-5">
+      <div className="py-5 flex justify-between">
         <h5>{`Players market`}</h5>
+        <div>
+          <Filter />
+        </div>
       </div>
       <PlayerTable
         players={players}
