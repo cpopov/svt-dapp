@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Filter from '@/components/Filter'
 import PlayerTable from '@/components/PlayerTable'
+import SearchBox from '@/components/SearchBox'
 import { getPlayersList } from '@/actions'
 
 export default function Home() {
@@ -33,10 +34,11 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col py-24 container">
-      <div className="py-5 flex justify-between">
+      <div className="py-5 flex flex-col md:flex-row gap-5 justify-between">
         <h5>{`Players market`}</h5>
-        <div>
+        <div className="flex flex-wrap gap-5">
           <Filter />
+          <SearchBox />
         </div>
       </div>
       <PlayerTable
