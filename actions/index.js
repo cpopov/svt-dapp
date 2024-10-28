@@ -9,8 +9,19 @@ const http = instance()
  * @returns {Promise<axios.AxiosResponse<any>>}
  * TODO: filters and search. See docs for more info
  */
-export const getPlayersList = ({ sort, dir }) =>
-  http.get(`/tokens/football?sort=${sort}&dir=${dir}`)
+export const getPlayersList = ({
+  search,
+  league,
+  team,
+  country,
+  sort,
+  dir,
+  page,
+  pageSize
+}) =>
+  http.get(
+    `/tokens/football?search=${search}&country=${country}&league=${league}&team=${team}&sort=${sort}&dir=${dir}&page=${page}&pageSize=${pageSize}`
+  )
 
 /**
  * Get the player details

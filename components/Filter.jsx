@@ -14,16 +14,15 @@ import {
 
 import { Label } from './ui/label'
 
-function Filter() {
+function Filter({
+  setSelectedLeague = () => {},
+  setSelectedTeam = () => {},
+  setSelectedCountry = () => {}
+}) {
   // Sample data for dropdowns
   const leagues = ['Premier League', 'La Liga', 'Serie A']
   const teams = ['Team A', 'Team B', 'Team C']
   const countries = ['USA', 'Spain', 'Italy']
-
-  // State for each filter
-  const [selectedLeague, setSelectedLeague] = useState('')
-  const [selectedTeam, setSelectedTeam] = useState('')
-  const [selectedCountry, setSelectedCountry] = useState('')
 
   return (
     <Popover>
