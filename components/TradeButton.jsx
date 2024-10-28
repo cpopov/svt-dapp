@@ -13,11 +13,17 @@ import { balanceOf, balanceOfUsdc } from '@/lib/contract-utils'
 import { Button } from '@/components/ui/button'
 import BuySell from '@/components/BuySell'
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
-function TradeButton({ data, ctaText = 'TRADE' }) {
+function TradeButton({
+  data,
+  ctaText = 'TRADE',
+  variant = 'default',
+  className
+}) {
   const cta =
     data.status === 'unlisted' || undefined
       ? 'PRE SALE'
@@ -71,7 +77,10 @@ function TradeButton({ data, ctaText = 'TRADE' }) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button disabled={isDisabled} className="gradient-button my-auto w-20">
+        <Button
+          variant={variant}
+          disabled={isDisabled}
+          className={cn('my-auto w-20', className)}>
           {cta}
         </Button>
       </DialogTrigger>

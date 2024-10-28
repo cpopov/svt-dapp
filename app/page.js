@@ -31,7 +31,10 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between py-24 container">
+    <main className="flex min-h-screen flex-col py-24 container">
+      <div className="py-5">
+        <h5>{`Players market`}</h5>
+      </div>
       <PlayerTable
         players={players}
         onSort={handleSort}
