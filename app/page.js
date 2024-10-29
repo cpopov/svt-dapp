@@ -1,10 +1,11 @@
 'use client'
 
-import { ChevronDown, Cross, X } from 'lucide-react'
+import { ChevronDown, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import Filter from '@/components/Filter'
+import PaginationComp from '@/components/PaginationComp'
 import PlayerTable from '@/components/PlayerTable'
 import SearchBox from '@/components/SearchBox'
 import SportFilter from '@/components/ui/SportFilter'
@@ -21,6 +22,7 @@ export default function Home() {
   const [selectedCountry, setSelectedCountry] = useState('')
   const [pageSize, setPageSize] = useState(10) // Default page size
   const [page, setPage] = useState(1) // Default to first page
+  const [totalPages, setTotalPages] = useState(5) // Default to 10 page
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -92,27 +94,7 @@ export default function Home() {
         sortBy={sortBy}
         sortDirection={sortDirection}
       />
-      {/* Pagination Controls */}
-      {/* <div className="flex justify-between items-center mt-4">
-        <button
-          className="btn"
-          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-          disabled={page === 1}>
-          Previous
-        </button>
-        <span>Page {page}</span>
-        <button className="btn" onClick={() => setPage(prev => prev + 1)}>
-          Next
-        </button>
-        <select
-          value={pageSize}
-          onChange={e => setPageSize(Number(e.target.value))}
-          className="border rounded px-2 py-1">
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-        </select>
-      </div> */}
+      <PaginationComp {...{ totalPages, page, setPage }} />
     </main>
   )
 }
