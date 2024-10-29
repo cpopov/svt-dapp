@@ -3,9 +3,7 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow
@@ -17,7 +15,6 @@ import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
-import { cn } from '@/lib/utils'
 
 const PlayerTable = ({ players = [], onSort, sortBy, sortDirection }) => {
   if (players.length)
@@ -44,7 +41,6 @@ const renderSortArrow = (criteria, sortBy, sortDirection) => {
 
 const TableWrapper = ({ children, onSort, sortBy, sortDirection }) => (
   <Table>
-    {/* <TableCaption>Players market</TableCaption> */}
     <TableHeader className="bg-[#DDEDE7]">
       <TableRow className="uppercase">
         <TableHead className="cursor-pointer" onClick={() => onSort('name')}>
@@ -91,9 +87,6 @@ const PlayerRow = ({ player }) => (
               variant="outline">
               {player.position}
             </Badge>
-            {/* <p className="rounded-full text-accent px-2 bg-[#EBEDF0] w-fit text-sm">
-              {player.position}
-            </p> */}
             <p>{player.team}</p>
           </div>
         </div>
