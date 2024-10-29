@@ -1,89 +1,78 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
 
+import { Badge } from './ui/badge'
 import Image from 'next/image'
+import React from 'react'
 import { Skeleton } from './ui/skeleton'
 import Ticker from './Ticker'
 import TradeButton from './TradeButton'
-import { cn } from '@/lib/utils'
-import { getUserPortfolio } from '@/actions'
-import { useAccount } from 'wagmi'
 
-const PortfolioTable = () => {
-  const [players, setPlayers] = useState(null)
-  const { address } = useAccount()
-
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        let { data } = await getUserPortfolio(address)
-        console.log('PortfolioTable(), loaded data:', data)
-        setPlayers(data?.tokens)
-      } catch (error) {
-        setPlayers([])
-      }
-    }
-    fetchPosts()
-  }, [])
-
-  if (!players) return <Loader />
-  if (players?.length === 0) return <ErrorMessage />
-
-  return (
-    <TableWrapper players={players}>
-      <div className="divide-y-[1px] border shadow-md">
+const PortfolioTable = ({ players = [], onSort, sortBy, sortDirection }) => {
+  if (players.length)
+    return (
+      <TableWrapper {...{ onSort, sortBy, sortDirection }}>
         {players.map((player, index) => (
           <PlayerRow key={index} player={player} />
         ))}
-      </div>
-    </TableWrapper>
-  )
+      </TableWrapper>
+    )
+  return <ErrorMessage />
 }
 
-const TableWrapper = ({ children, players }) => (
-  <div className="md:py-5 w-full md:w-fit">
-    <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
-    <div className="overflow-scroll scrollbar-hide">
-      <div className="grid grid-cols-8 pl-5 py-3 md:mt-10 mt-5 min-w-[800px] bg-[#DDEDE7] ">
-        <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
-          <p className="text-sm font-semibold uppercase">My Tokens</p>
-          <Ticker />
-        </div>
-        <RowTitle text="Player" className="col-span-2" />
-        <RowTitle text="Symbol" />
-        <RowTitle text="Team" />
-        <RowTitle text="Position" />
-        <div className={`min-w-[150px] col-span-1 flex gap-1 items-center`}>
-          <p className="text-sm font-semibold uppercase">Price</p>
-          <Ticker />
-        </div>
-        <RowTitle text="Action" className="sticky right-0 bg-[#DDEDE7] pl-3" />
-      </div>
-      {children}
-    </div>
-  </div>
+const renderSortArrow = (criteria, sortBy, sortDirection) => {
+  if (sortBy === criteria) {
+    return sortDirection === 'asc' ? (
+      <Ticker upFill="#099F8C" />
+    ) : (
+      <Ticker downFill="#099F8C" />
+    )
+  }
+  return <Ticker fill="#778899" className="duration-300" />
+}
+
+const TableWrapper = ({ children, onSort, sortBy, sortDirection }) => (
+  <Table>
+    <TableHeader className="bg-[#DDEDE7]">
+      <TableRow className="uppercase">
+        <TableHead className="hidden md:table-cell">My Tokens</TableHead>
+        <TableHead className="cursor-pointer" onClick={() => onSort('name')}>
+          <div className="flex items-center gap-1">
+            Player {renderSortArrow('name', sortBy, sortDirection)}
+          </div>
+        </TableHead>
+        <TableHead className="hidden md:table-cell">Symbol</TableHead>
+        <TableHead className="cursor-pointer" onClick={() => onSort('team')}>
+          <div className="flex items-center md:justify-start justify-center gap-1">
+            Team {renderSortArrow('team', sortBy, sortDirection)}
+          </div>
+        </TableHead>
+        <TableHead className="hidden md:table-cell">Position</TableHead>
+        <TableHead className="cursor-pointer" onClick={() => onSort('price')}>
+          <div className="flex items-center md:justify-start justify-end gap-1">
+            Price {renderSortArrow('price', sortBy, sortDirection)}
+          </div>
+        </TableHead>
+        <TableHead className="hidden md:table-cell">Action</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody className="bg-white">{children}</TableBody>
+  </Table>
 )
 
-const RowTitle = ({ text, className }) => (
-  <div className={cn(`md:min-w-[150px] col-span-1`, className)}>
-    <p className="text-sm font-semibold uppercase">{text}</p>
-  </div>
-)
-
-const PlayerRow = ({ player, ...props }) => (
-  <div
-    {...props}
-    className="pl-5 items-center min-w-[800px] group bg-white hover:bg-secondary">
-    <div className="grid grid-cols-8">
-      <div className="min-w-[150px] col-span-1 flex items-center py-3">
-        <p className="text-sm group-hover:text-accent font-semibold">
-          {Number(player?.amount)?.toFixed(2)}
-        </p>
-        <p className="text-xs pl-1"></p>
-      </div>
-      <div className="min-w-[150px] col-span-2 flex items-center">
-        <div className="relative h-10 w-10 mr-2 rounded-full overflow-clip group-hover:border-accent border">
+const PlayerRow = ({ player }) => (
+  <TableRow className="hover:bg-secondary group">
+    <TableCell colSpan={4} className="md:hidden">
+      <div className="flex items-center h-full">
+        <div className="relative h-12 w-12 mr-2 rounded-full overflow-clip group-hover:border-accent border">
           <Image
             src={player.photo || '/player_image.jpg'}
             className="mr-2 object-contain"
@@ -91,39 +80,72 @@ const PlayerRow = ({ player, ...props }) => (
             alt=""
           />
         </div>
-        <p className="text-sm group-hover:text-accent font-semibold">
-          {player.name}
+        <div>
+          <p className="text-accent font-bold">{player.name}</p>
+          <div className="flex gap-2 items-center">
+            <Badge
+              className="rounded-full text-accent font-light bg-[#EBEDF0] w-fit text-sm"
+              variant="outline">
+              {player.position}
+            </Badge>
+            <p>{player.team}</p>
+          </div>
+        </div>
+        <div className="flex flex-col ml-auto pl-2">
+          <p className="text-center">
+            {player.price ? `$ ${player.price}` : ''}
+          </p>
+          <TradeButton
+            variant="outline"
+            className="!hover:gradient-button !hover:bg-white border-[#099F8C] text-[#099F8C]"
+            data={player}
+          />
+        </div>
+      </div>
+    </TableCell>
+    <TableCell className="hidden md:table-cell">
+      <div className="flex items-end">
+        <p className="text-[#47A847] font-bold">
+          {Number(player?.amount)?.toFixed(2)}
+          <span className="text-[#47A847] font-normal text-xs pl-1">SVC</span>
         </p>
       </div>
-      <PlayerCell text={player.symbol} />
-      <PlayerCell text={player.team} />
-      <PlayerCell text={player.position} />
-      <PlayerCell text={player?.price ? `$ ${player?.price}` : ''} />
-      <div className="md:min-w-[150px] sticky right-0 bg-white group-hover:bg-secondary pl-3 flex items-center">
-        <TradeButton data={player} className="group-hover:hover" />
+    </TableCell>
+    <TableCell className="hidden md:table-cell">
+      <div className="flex items-center h-full">
+        <div className="relative h-12 w-12 mr-2 rounded-full overflow-clip group-hover:border-accent border">
+          <Image
+            src={player.photo || '/player_image.jpg'}
+            className="mr-2 object-contain"
+            fill
+            alt=""
+          />
+        </div>
+        <p className="group-hover:text-accent font-bold">{player.name}</p>
       </div>
-    </div>
-  </div>
+    </TableCell>
+    <TableCell className="hidden md:table-cell">{player.symbol}</TableCell>
+    <TableCell className="hidden md:table-cell">{player.team}</TableCell>
+    <TableCell className="hidden md:table-cell">{player.position}</TableCell>
+    <TableCell className="hidden md:table-cell">
+      {player.price ? `$ ${player.price}` : ''}
+    </TableCell>
+    <TableCell className="hidden md:table-cell">
+      <TradeButton className="gradient-button" data={player} />
+    </TableCell>
+  </TableRow>
 )
 
-const PlayerCell = ({ text, colSpan = 1, className = '' }) => (
-  <div className={`min-w-[150px] col-span-${colSpan} flex items-center`}>
-    <p className={`text-sm font-medium ${className}`}>{text}</p>
-  </div>
-)
-
-function Loader({ length = 1 }) {
+function Loader({ length = 3 }) {
   return (
     <TableWrapper>
-      <div className="divide-y-2">
-        {[...Array(length)].map((_, index) => (
-          <React.Fragment key={index}>
-            <Skeleton className="w-full h-20 flex items-center justify-center">
-              Loading...
-            </Skeleton>
-          </React.Fragment>
-        ))}
-      </div>
+      {[...Array(length)].map((_, index) => (
+        <TableRow key={index}>
+          <TableCell colSpan={7}>
+            <Skeleton className="w-full h-20" />
+          </TableCell>
+        </TableRow>
+      ))}
     </TableWrapper>
   )
 }
@@ -131,9 +153,13 @@ function Loader({ length = 1 }) {
 function ErrorMessage() {
   return (
     <TableWrapper>
-      <div className="h-20 rounded-md flex w-full justify-center items-center">
-        <p>No players found</p>
-      </div>
+      <TableRow>
+        <TableCell colSpan={7}>
+          <div className="h-8 flex justify-center items-center">
+            <p>No tokens found</p>
+          </div>
+        </TableCell>
+      </TableRow>
     </TableWrapper>
   )
 }

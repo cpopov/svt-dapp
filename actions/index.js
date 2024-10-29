@@ -29,4 +29,15 @@ export const getPlayersList = ({
  * @param address token address
  * @returns {Promise<axios.AxiosResponse<any>>}
  */
-export const getUserPortfolio = address => http.get(`/portfolio/${address}`)
+export const getUserPortfolio = ({
+  address,
+  search,
+  league,
+  team,
+  country,
+  sort,
+  dir
+}) =>
+  http.get(
+    `/portfolio/${address}?search=${search}&country=${country}&league=${league}&team=${team}&sort=${sort}&dir=${dir}`
+  )
