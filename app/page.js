@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react'
 
+import { ChevronDown } from 'lucide-react'
 import Filter from '@/components/Filter'
 import PlayerTable from '@/components/PlayerTable'
 import SearchBox from '@/components/SearchBox'
+import SportFilter from '@/components/ui/SportFilter'
 import { getPlayersList } from '@/actions'
 
 export default function Home() {
   const [players, setPlayers] = useState([])
   const [sortBy, setSortBy] = useState('name')
+  const [sport, setSport] = useState('football')
   const [sortDirection, setSortDirection] = useState('asc')
   const [search, setSearch] = useState('')
   const [selectedLeague, setSelectedLeague] = useState('')
@@ -25,6 +28,7 @@ export default function Home() {
         team: selectedTeam,
         country: selectedCountry,
         search,
+        sport,
         sort: sortBy,
         dir: sortDirection,
         pageSize,
@@ -41,7 +45,8 @@ export default function Home() {
     selectedTeam,
     selectedCountry,
     pageSize,
-    page
+    page,
+    sport
   ])
 
   const handleSort = criteria => {
@@ -56,7 +61,14 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col py-24 container">
       <div className="py-5 flex flex-col md:flex-row gap-5 justify-between">
-        <h5>{`Players market`}</h5>
+        <SportFilter {...{ sport, setSport }}>
+          <div className="flex gap-1 items-center">
+            <h5 className="text-left">
+              <span className="capitalize">{`${sport} `}</span>market
+            </h5>
+            <ChevronDown />
+          </div>
+        </SportFilter>
         <div className="flex flex-wrap gap-5">
           <Filter
             {...{ setSelectedLeague, setSelectedTeam, setSelectedCountry }}

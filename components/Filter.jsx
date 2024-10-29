@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { countries, leagues, teams } from '@/lib/constants'
 
 import { Label } from './ui/label'
 
@@ -20,9 +21,6 @@ function Filter({
   setSelectedCountry = () => {}
 }) {
   // Sample data for dropdowns
-  const leagues = ['Premier League', 'La Liga', 'Serie A']
-  const teams = ['Team A', 'Team B', 'Team C']
-  const countries = ['USA', 'Spain', 'Italy']
 
   return (
     <Popover>

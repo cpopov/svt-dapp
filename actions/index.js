@@ -17,10 +17,11 @@ export const getPlayersList = ({
   sort,
   dir,
   page,
+  sport,
   pageSize
 }) =>
   http.get(
-    `/tokens/football?search=${search}&country=${country}&league=${league}&team=${team}&sort=${sort}&dir=${dir}&page=${page}&pageSize=${pageSize}`
+    `/tokens/${sport}?search=${search}&country=${country}&league=${league}&team=${team}&sort=${sort}&dir=${dir}&page=${page}&pageSize=${pageSize}`
   )
 
 /**
