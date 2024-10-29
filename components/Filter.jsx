@@ -3,7 +3,6 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import React, { useRef, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -12,6 +11,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { countries, leagues, teams } from '@/lib/constants'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from './ui/button'
 import { Label } from './ui/label'
@@ -21,22 +21,35 @@ import { X } from 'lucide-react'
 function Filter({
   setSelectedLeague = () => {},
   setSelectedTeam = () => {},
-  setSelectedCountry = () => {}
+  setSelectedCountry = () => {},
+  selectedCountry = '',
+  selectedTeam = '',
+  selectedLeague = ''
 }) {
-  const [league, setLeague] = useState('')
-  const [team, setTeam] = useState('')
-  const [country, setCountry] = useState('')
+  const [league, setLeague] = useState(selectedLeague)
+  const [team, setTeam] = useState(selectedTeam)
+  const [country, setCountry] = useState(selectedCountry)
   const closeRef = useRef(null)
-  // Sample data for dropdowns
+
+  useEffect(() => {
+    setLeague(selectedLeague)
+    setTeam(selectedTeam)
+    setCountry(selectedCountry)
+  }, [selectedLeague, selectedTeam, selectedCountry])
+
   const setFilters = () => {
     setSelectedLeague(league)
     setSelectedTeam(team)
     setSelectedCountry(country)
   }
+
   const resetFilters = () => {
     setSelectedLeague('')
     setSelectedTeam('')
     setSelectedCountry('')
+    setTeam('')
+    setCountry('')
+    setLeague('')
     closeRef?.current?.click()
   }
 
@@ -72,9 +85,12 @@ function Filter({
           {/* League Filter */}
           <div>
             <Label className="font-light mb-2">League</Label>
-            <Select onValueChange={setLeague}>
+            <Select onValueChange={setLeague} value={league}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select League" />
+                <SelectValue
+                  defaultValue={league}
+                  placeholder="Select League"
+                />
               </SelectTrigger>
               <SelectContent>
                 {leagues.map(league => (
@@ -85,13 +101,12 @@ function Filter({
               </SelectContent>
             </Select>
           </div>
-
           {/* Team Filter */}
           <div>
             <Label className="font-light mb-2">Team</Label>
-            <Select onValueChange={setTeam}>
+            <Select onValueChange={setTeam} value={team}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Team" />
+                <SelectValue defaultValue={team} placeholder="Select Team" />
               </SelectTrigger>
               <SelectContent>
                 {teams.map(team => (
@@ -102,13 +117,15 @@ function Filter({
               </SelectContent>
             </Select>
           </div>
-
           {/* Country Filter */}
           <div>
             <Label className="font-light mb-2">Country</Label>
-            <Select onValueChange={setCountry}>
+            <Select onValueChange={setCountry} value={country}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Country" />
+                <SelectValue
+                  defaultValue={country}
+                  placeholder="Select Country"
+                />
               </SelectTrigger>
               <SelectContent>
                 {countries.map(country => (

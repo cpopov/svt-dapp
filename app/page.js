@@ -83,7 +83,14 @@ export default function Home() {
             <FilterBadge filter={selectedCountry} action={setSelectedCountry} />
           </div>
           <Filter
-            {...{ setSelectedLeague, setSelectedTeam, setSelectedCountry }}
+            {...{
+              selectedCountry,
+              selectedTeam,
+              selectedLeague,
+              setSelectedLeague,
+              setSelectedTeam,
+              setSelectedCountry
+            }}
           />
           <SearchBox timeOut={400} setSearch={setSearch} />
         </div>
