@@ -33,7 +33,11 @@ const PlayerTable = ({ players = [], onSort, sortBy, sortDirection }) => {
 
 const renderSortArrow = (criteria, sortBy, sortDirection) => {
   if (sortBy === criteria) {
-    return sortDirection === 'asc' ? <Ticker /> : <Ticker />
+    return sortDirection === 'asc' ? (
+      <Ticker upFill="#099F8C" />
+    ) : (
+      <Ticker downFill="#099F8C" />
+    )
   }
   return <Ticker fill="#778899" className="duration-300" />
 }

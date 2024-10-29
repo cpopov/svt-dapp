@@ -1,42 +1,35 @@
-// import { PlayIcon } from '@radix-ui/react-icons'
-// import React from 'react'
-
 import { cn } from '@/lib/utils'
 
-// function Ticker({ size }) {
-//   return (
-//     <PlayIcon
-//       className="-rotate-90 fill-accent stroke-accent"
-//       fill="#099F8C"
-//       size={size}
-//     />
-//   )
-// }
-
-// export default Ticker
-const Ticker = ({ fill = '#099F8C', size = 6, className }) => {
+const Ticker = ({
+  upFill = '#484964',
+  downFill = '#484964',
+  size = 6,
+  className
+}) => {
   return (
-    <div className={cn('flex flex-col gap-[1px] duration-300', className)}>
+    <div className={cn('flex flex-col gap-[2px] duration-300', className)}>
       <svg
         className="rotate-180"
-        fill={fill}
-        height={`${size}px`}
-        width={`${size}px`}
-        version="1.1"
-        id="Capa_2"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 490 490">
-        <polygon points="245,456.701 490,33.299 0,33.299" />
+        width="8"
+        height="4"
+        viewBox="0 0 8 4"
+        fill={upFill}
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8 0.4C8 0.176 7.78 0 7.5 0H0.5C0.22 0 0 0.176 0 0.4C0 0.504 0.05 0.592 0.13 0.664L3.63 3.864C3.72 3.944 3.85 4 4 4C4.15 4 4.28 3.944 4.37 3.864L7.87 0.664C7.95 0.592 8 0.504 8 0.4Z"
+          fill={upFill}
+        />
       </svg>
       <svg
-        fill={fill}
-        height={`${size}px`}
-        width={`${size}px`}
-        version="1.1"
-        id="Capa_1"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 490 490">
-        <polygon points="245,456.701 490,33.299 0,33.299" />
+        width="8"
+        height="4"
+        viewBox="0 0 8 4"
+        fill={downFill}
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8 0.4C8 0.176 7.78 0 7.5 0H0.5C0.22 0 0 0.176 0 0.4C0 0.504 0.05 0.592 0.13 0.664L3.63 3.864C3.72 3.944 3.85 4 4 4C4.15 4 4.28 3.944 4.37 3.864L7.87 0.664C7.95 0.592 8 0.504 8 0.4Z"
+          fill={downFill}
+        />
       </svg>
     </div>
   )
