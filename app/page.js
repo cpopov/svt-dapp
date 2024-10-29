@@ -1,8 +1,9 @@
 'use client'
 
+import { ChevronDown, Cross, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-import { ChevronDown } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import Filter from '@/components/Filter'
 import PlayerTable from '@/components/PlayerTable'
 import SearchBox from '@/components/SearchBox'
@@ -36,7 +37,11 @@ export default function Home() {
       })
       setPlayers(data)
     }
-    fetchPlayers()
+    try {
+      fetchPlayers()
+    } catch (error) {
+      console.log(error)
+    }
   }, [
     sortBy,
     sortDirection,
@@ -69,7 +74,12 @@ export default function Home() {
             <ChevronDown />
           </div>
         </SportFilter>
-        <div className="flex flex-wrap gap-5">
+        <div className="flex flex-wrap items-center gap-5">
+          <div className="flex gap-2 flex-wrap">
+            <FilterBadge filter={selectedLeague} action={setSelectedLeague} />
+            <FilterBadge filter={selectedTeam} action={setSelectedTeam} />
+            <FilterBadge filter={selectedCountry} action={setSelectedCountry} />
+          </div>
           <Filter
             {...{ setSelectedLeague, setSelectedTeam, setSelectedCountry }}
           />
@@ -105,4 +115,21 @@ export default function Home() {
       </div> */}
     </main>
   )
+}
+const FilterBadge = ({ filter, action = () => {} }) => {
+  return filter ? (
+    <Badge
+      className="rounded-full border-accent text-accent bg-[#EBEDF0] w-fit h-fit text-sm font-medium flex items-center"
+      variant="outline">
+      {filter}
+      <X
+        role="button"
+        className="stroke-[4px] ml-1"
+        size={12}
+        onClick={() => {
+          action('')
+        }}
+      />
+    </Badge>
+  ) : null
 }

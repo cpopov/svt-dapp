@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -13,14 +13,32 @@ import {
 } from '@/components/ui/select'
 import { countries, leagues, teams } from '@/lib/constants'
 
+import { Button } from './ui/button'
 import { Label } from './ui/label'
+import { PopoverClose } from '@radix-ui/react-popover'
+import { X } from 'lucide-react'
 
 function Filter({
   setSelectedLeague = () => {},
   setSelectedTeam = () => {},
   setSelectedCountry = () => {}
 }) {
+  const [league, setLeague] = useState('')
+  const [team, setTeam] = useState('')
+  const [country, setCountry] = useState('')
+  const closeRef = useRef(null)
   // Sample data for dropdowns
+  const setFilters = () => {
+    setSelectedLeague(league)
+    setSelectedTeam(team)
+    setSelectedCountry(country)
+  }
+  const resetFilters = () => {
+    setSelectedLeague('')
+    setSelectedTeam('')
+    setSelectedCountry('')
+    closeRef?.current?.click()
+  }
 
   return (
     <Popover>
@@ -45,12 +63,16 @@ function Filter({
       </PopoverTrigger>
       <PopoverContent>
         <div className="space-y-4">
-          <p className="text font-medium">Filter players</p>
-
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Filter players</p>
+            <PopoverClose ref={closeRef}>
+              <X size={20} className="text-accent" />
+            </PopoverClose>
+          </div>
           {/* League Filter */}
           <div>
             <Label className="font-light mb-2">League</Label>
-            <Select onValueChange={setSelectedLeague}>
+            <Select onValueChange={setLeague}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select League" />
               </SelectTrigger>
@@ -67,7 +89,7 @@ function Filter({
           {/* Team Filter */}
           <div>
             <Label className="font-light mb-2">Team</Label>
-            <Select onValueChange={setSelectedTeam}>
+            <Select onValueChange={setTeam}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Team" />
               </SelectTrigger>
@@ -84,7 +106,7 @@ function Filter({
           {/* Country Filter */}
           <div>
             <Label className="font-light mb-2">Country</Label>
-            <Select onValueChange={setSelectedCountry}>
+            <Select onValueChange={setCountry}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Country" />
               </SelectTrigger>
@@ -96,6 +118,14 @@ function Filter({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Button variant="outline" onClick={resetFilters}>
+              Cancel
+            </Button>
+            <Button className="gradient-button" onClick={setFilters}>
+              Apply Filter
+            </Button>
           </div>
         </div>
       </PopoverContent>
