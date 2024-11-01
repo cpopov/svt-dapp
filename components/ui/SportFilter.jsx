@@ -51,7 +51,7 @@ function SportFilter({ children = 'Open', sport, setSport = () => {} }) {
         </DrawerTitle>
         <DrawerContent className="py-0">
           <DrawerTitle className="pb-3">
-            <span className="text-2xl font-semibold px-5 pb-5">
+            <span className="text-xl font-medium px-5 pb-5">
               Select Sports Market
             </span>
           </DrawerTitle>
@@ -61,7 +61,7 @@ function SportFilter({ children = 'Open', sport, setSport = () => {} }) {
               return (
                 <div
                   className={cn(
-                    'rounded-full p-3 text-xl uppercase font-medium  focus:bg-[#DDEDE7] flex items-center',
+                    'rounded-full p-3 uppercase font-medium  focus:bg-[#DDEDE7] flex items-center',
                     sport === data?.value && 'bg-[#DDEDE7] text-accent'
                   )}
                   key={data?.value}

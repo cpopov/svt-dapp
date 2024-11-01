@@ -80,7 +80,7 @@ const PlayerRow = ({ player }) => (
           />
         </div>
         <div>
-          <p className="text-accent font-bold">{player.name}</p>
+          <p className="text-accent font-bold text-[#08401A]">{player.name}</p>
           <div className="flex gap-2 items-center">
             <Badge
               className="rounded-full text-accent font-light bg-[#EBEDF0] w-fit text-sm"
@@ -112,7 +112,7 @@ const PlayerRow = ({ player }) => (
             alt=""
           />
         </div>
-        <p className="group-hover:text-accent font-bold">{player.name}</p>
+        <p className="group-hover:text-[#08401A] font-bold">{player.name}</p>
       </div>
     </TableCell>
     <TableCell className="hidden md:table-cell">{player.symbol}</TableCell>
