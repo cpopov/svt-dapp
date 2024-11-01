@@ -110,6 +110,16 @@
   background-position: center;
   animation: gradientShift 0.3s ease-in-out forwards;
 }
+.outline-gradient {
+  background-position: center;
+  transition: background 0.3s ease-in-out;
+}
+
+.outline-gradient:hover {
+  background: linear-gradient(90deg, #009694 0%, #65f53d 100%);
+  background-position: center;
+  animation: gradientShift 0.3s ease-in-out forwards;
+}
 
 @keyframes gradientShift {
   0% {
