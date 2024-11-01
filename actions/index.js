@@ -41,3 +41,5 @@ export const getUserPortfolio = ({
   http.get(
     `/portfolio/${address}?search=${search}&country=${country}&league=${league}&team=${team}&sort=${sort}&dir=${dir}`
   )
+export const getSportFilters = ({ sport, item }) =>
+  http.get(`/markets/${sport}/${item}`)

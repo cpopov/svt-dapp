@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Popover,
   PopoverContent,
@@ -10,15 +12,17 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { countries, leagues, teams } from '@/lib/constants'
+// import { countries, leagues, teams } from '@/lib/constants'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from './ui/button'
 import { Label } from './ui/label'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { X } from 'lucide-react'
+import useFetchFilterData from '@/lib/hooks/useFetchFilterData'
 
 function Filter({
+  sport = 'football',
   setSelectedLeague = () => {},
   setSelectedTeam = () => {},
   setSelectedCountry = () => {},
@@ -30,7 +34,7 @@ function Filter({
   const [team, setTeam] = useState(selectedTeam)
   const [country, setCountry] = useState(selectedCountry)
   const closeRef = useRef(null)
-
+  const { data, loading, error } = useFetchFilterData(sport)
   useEffect(() => {
     setLeague(selectedLeague)
     setTeam(selectedTeam)
@@ -52,7 +56,7 @@ function Filter({
     setLeague('')
     closeRef?.current?.click()
   }
-
+  if (!data || error) return null
   return (
     <Popover>
       <PopoverTrigger>
@@ -83,59 +87,65 @@ function Filter({
             </PopoverClose>
           </div>
           {/* League Filter */}
-          <div>
-            <Label className="font-light mb-2">League</Label>
-            <Select onValueChange={setLeague} value={league}>
-              <SelectTrigger className="w-full">
-                <SelectValue
-                  defaultValue={league}
-                  placeholder="Select League"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {leagues.map(league => (
-                  <SelectItem key={league} value={league}>
-                    {league}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {data?.leagues.length ? (
+            <div>
+              <Label className="font-light mb-2">League</Label>
+              <Select onValueChange={setLeague} value={league}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    defaultValue={league}
+                    placeholder="Select League"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {data?.leagues?.map(league => (
+                    <SelectItem key={league} value={league}>
+                      {league}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
           {/* Team Filter */}
-          <div>
-            <Label className="font-light mb-2">Team</Label>
-            <Select onValueChange={setTeam} value={team}>
-              <SelectTrigger className="w-full">
-                <SelectValue defaultValue={team} placeholder="Select Team" />
-              </SelectTrigger>
-              <SelectContent>
-                {teams.map(team => (
-                  <SelectItem key={team} value={team}>
-                    {team}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {data?.teams?.length ? (
+            <div>
+              <Label className="font-light mb-2">Team</Label>
+              <Select onValueChange={setTeam} value={team}>
+                <SelectTrigger className="w-full">
+                  <SelectValue defaultValue={team} placeholder="Select Team" />
+                </SelectTrigger>
+                <SelectContent>
+                  {data?.teams?.map(team => (
+                    <SelectItem key={team} value={team}>
+                      {team}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
           {/* Country Filter */}
-          <div>
-            <Label className="font-light mb-2">Country</Label>
-            <Select onValueChange={setCountry} value={country}>
-              <SelectTrigger className="w-full">
-                <SelectValue
-                  defaultValue={country}
-                  placeholder="Select Country"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {countries.map(country => (
-                  <SelectItem key={country} value={country}>
-                    {country}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {data?.countries?.length ? (
+            <div>
+              <Label className="font-light mb-2">Country</Label>
+              <Select onValueChange={setCountry} value={country}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    defaultValue={country}
+                    placeholder="Select Country"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {data?.countries?.map(country => (
+                    <SelectItem key={country} value={country}>
+                      {country}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : null}
           <div className="grid grid-cols-2 gap-4">
             <Button variant="outline" onClick={resetFilters}>
               Cancel
