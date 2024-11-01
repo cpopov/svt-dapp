@@ -2,9 +2,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
@@ -12,8 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import React, { useRef } from 'react'
@@ -26,7 +21,7 @@ function SportFilter({ children = 'Open', sport, setSport = () => {} }) {
   const closeRef = useRef()
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu className="hidden md:block">
         <DropdownMenuTrigger className="focus:none hidden md:block">
           {children}
         </DropdownMenuTrigger>
@@ -49,12 +44,17 @@ function SportFilter({ children = 'Open', sport, setSport = () => {} }) {
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Drawer className="md:hidden block">
-        <DrawerTrigger>{children}</DrawerTrigger>
+      <Drawer className="md:hidden">
+        <DrawerTrigger className="md:hidden">{children}</DrawerTrigger>
+        <DrawerTitle className="hidden">
+          <span className="sr-only">Sports filter</span>
+        </DrawerTitle>
         <DrawerContent className="py-0">
-          <p className="text-2xl font-semibold px-5 pb-3">
-            Select Sports Market
-          </p>
+          <DrawerTitle className="pb-3">
+            <span className="text-2xl font-semibold px-5 pb-5">
+              Select Sports Market
+            </span>
+          </DrawerTitle>
           <SelectSeparator className="bg-black/20" />
           <div className="flex flex-col gap-4 p-2">
             {sports.map(data => {
