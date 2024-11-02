@@ -61,7 +61,7 @@ export default function Home() {
       <div className="py-5 flex flex-col md:flex-row gap-5 justify-between">
         <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
         <div className="flex flex-wrap items-center gap-5">
-          <div className="flex gap-2 flex-wrap">
+          <div className="hidden md:flex gap-2 flex-wrap">
             <FilterBadge filter={selectedLeague} action={setSelectedLeague} />
             <FilterBadge filter={selectedTeam} action={setSelectedTeam} />
             <FilterBadge filter={selectedCountry} action={setSelectedCountry} />
@@ -76,6 +76,11 @@ export default function Home() {
               setSelectedCountry
             }}
           />
+          <div className="flex gap-2 flex-wrap md:hidden">
+            <FilterBadge filter={selectedLeague} action={setSelectedLeague} />
+            <FilterBadge filter={selectedTeam} action={setSelectedTeam} />
+            <FilterBadge filter={selectedCountry} action={setSelectedCountry} />
+          </div>
           <SearchBox timeOut={400} setSearch={setSearch} />
         </div>
       </div>
