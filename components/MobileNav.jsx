@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi'
 import { usePathname } from 'next/navigation'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 
-function MobileNav() {
+function MobileNav({ balance = 0 }) {
   const { address, isConnected } = useAccount()
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
@@ -51,14 +51,22 @@ function MobileNav() {
         }`}>
         <div className="overflow-hidden">
           <div className="w-full bg-[#08401A] text-white flex flex-col items-center">
-            <div className="text-lg font-medium uppercase bg-[#08401A] w-full flex h-14 px-4 items-center justify-between border-b border-[1px] border-white/20">
-              <Button
-                variant="ghost"
-                role="button"
-                onClick={() => open()}
-                className="text-white bg-transparent w-[100px]">
-                {address ? truncate(address) : 'Connect'}
-              </Button>
+            <div className="text-lg font-medium bg-[#08401A] w-full flex py-2 px-4 items-center justify-between border-b border-[1px] border-white/20">
+              <div onClick={() => open()} className="flex items-center gap-3">
+                <div className="h-8 w-8 relative">
+                  <Image
+                    fill
+                    alt="logo"
+                    sizes="auto"
+                    src="/user-icon.png"
+                    className="object-contain"
+                  />
+                </div>
+                <div>
+                  {address ? <p>{truncate(address)}</p> : null}
+                  {address && balance ? <p>Total balance: {balance}</p> : null}
+                </div>
+              </div>
               <X onClick={() => setIsOpen(!isOpen)} role="" button />
             </div>
             {navLinks.map(({ title, path }) => (
@@ -78,22 +86,9 @@ function MobileNav() {
                     )}
                   />
                   <p>{title}</p>
-                  {/* <input
-                    type="radio"
-                    id="html"
-                    name="fav_language"
-                    value={title}
-                  />
-                    <label for="html">{title}</label> */}
                 </div>
               </Link>
             ))}
-            {/* <Button
-            onClick={() => open()}
-            className="text-white bg-transparent w-[100px]"
-            variant="outline">
-            {address ? truncate(address) : 'Connect'}
-          </Button> */}
           </div>
         </div>
       </div>

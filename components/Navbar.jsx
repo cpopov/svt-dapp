@@ -1,9 +1,26 @@
+'use client'
+
+import { balanceOfUsdc, formatEth } from '@/lib/contract-utils'
+import { useEffect, useState } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import MobileNav from './MobileNav'
 import Navigation from './Navigation'
+import { useAccount } from 'wagmi'
 
-async function Navbar() {
+export default function Navbar() {
+  const { address, isConnected } = useAccount()
+  const [balanceUsdc, setBalanceUsdc] = useState(0)
+  useEffect(() => {
+    if (isConnected) {
+      balanceOfUsdc(address)
+        .then(bal => {
+          setBalanceUsdc(parseFloat(formatEth(bal?.toString())).toFixed(2))
+        })
+        .catch(e => console.log('Balance fetching usdc: ', e))
+    }
+  }, [address])
   return (
     <>
       <nav
@@ -23,9 +40,7 @@ async function Navbar() {
           <Navigation />
         </div>
       </nav>
-      <MobileNav />
+      <MobileNav balance={balanceUsdc} />
     </>
   )
 }
-
-export default Navbar
