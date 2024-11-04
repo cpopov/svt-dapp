@@ -92,7 +92,7 @@ const PlayerRow = ({ player }) => (
           <p className="text-text_accent font-bold">{player.name}</p>
           <div className="flex gap-2 items-center">
             <Badge
-              className="rounded-full text-text_accent font-light bg-[#EBEDF0] w-fit text-sm"
+              className="rounded-full text-text_accent font-normal bg-[#EBEDF0] w-fit text-sm"
               variant="outline">
               {player.position}
             </Badge>

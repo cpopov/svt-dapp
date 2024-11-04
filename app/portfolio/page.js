@@ -57,8 +57,8 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col py-24 container">
-      <div className="py-5 flex flex-col md:flex-row gap-5 justify-between">
+    <main className="flex min-h-screen flex-col py-24">
+      <div className="py-5 flex flex-col md:flex-row gap-5 justify-between container">
         <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
         <div className="flex flex-wrap items-center gap-5">
           <div className="hidden md:flex gap-2 flex-wrap">

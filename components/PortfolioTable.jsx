@@ -19,11 +19,13 @@ import TradeButton from './TradeButton'
 const PortfolioTable = ({ players = [], onSort, sortBy, sortDirection }) => {
   if (players.length)
     return (
-      <TableWrapper {...{ onSort, sortBy, sortDirection }}>
-        {players.map((player, index) => (
-          <PlayerRow key={index} player={player} />
-        ))}
-      </TableWrapper>
+      <div className="md:container">
+        <TableWrapper {...{ onSort, sortBy, sortDirection }}>
+          {players.map((player, index) => (
+            <PlayerRow key={index} player={player} />
+          ))}
+        </TableWrapper>
+      </div>
     )
   return <ErrorMessage />
 }
@@ -81,10 +83,18 @@ const PlayerRow = ({ player }) => (
           />
         </div>
         <div>
-          <p className="text-accent font-bold">{player.name}</p>
-          <div className="flex gap-2 items-center">
+          <div className="flex items-end">
+            <p className="text-[#47A847] font-bold">
+              {Number(player?.amount)?.toFixed(2)}
+              <span className="text-[#47A847] font-normal text-xs pl-1">
+                SVC
+              </span>
+            </p>
+          </div>
+          <p className="text-text_accent font-bold">{player.name}</p>
+          <div className="flex pt-1 gap-2 items-center">
             <Badge
-              className="rounded-full text-accent font-light bg-[#EBEDF0] w-fit text-sm"
+              className="rounded-full text-text_accent font-normal bg-[#EBEDF0] w-fit text-sm"
               variant="outline">
               {player.position}
             </Badge>
@@ -113,7 +123,7 @@ const PlayerRow = ({ player }) => (
     </TableCell>
     <TableCell className="hidden md:table-cell">
       <div className="flex items-center h-full">
-        <div className="relative h-12 w-12 mr-2 rounded-full overflow-clip group-hover:border-accent border">
+        <div className="relative h-14 w-14 mr-2 rounded-full overflow-clip group-hover:border-accent border">
           <Image
             src={player.photo || '/player_image.jpg'}
             className="mr-2 object-contain"
@@ -121,7 +131,7 @@ const PlayerRow = ({ player }) => (
             alt=""
           />
         </div>
-        <p className="group-hover:text-accent font-bold">{player.name}</p>
+        <p className="text-text_accent font-bold">{player.name}</p>
       </div>
     </TableCell>
     <TableCell className="hidden md:table-cell">{player.symbol}</TableCell>
@@ -138,29 +148,33 @@ const PlayerRow = ({ player }) => (
 
 function Loader({ length = 3 }) {
   return (
-    <TableWrapper>
-      {[...Array(length)].map((_, index) => (
-        <TableRow key={index}>
-          <TableCell colSpan={7}>
-            <Skeleton className="w-full h-20" />
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableWrapper>
+    <div className="md:container">
+      <TableWrapper>
+        {[...Array(length)].map((_, index) => (
+          <TableRow key={index}>
+            <TableCell colSpan={7}>
+              <Skeleton className="w-full h-20" />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableWrapper>
+    </div>
   )
 }
 
 function ErrorMessage() {
   return (
-    <TableWrapper>
-      <TableRow>
-        <TableCell colSpan={7}>
-          <div className="h-8 flex justify-center items-center">
-            <p>No tokens found</p>
-          </div>
-        </TableCell>
-      </TableRow>
-    </TableWrapper>
+    <div className="md:container">
+      <TableWrapper>
+        <TableRow>
+          <TableCell colSpan={7}>
+            <div className="h-8 flex justify-center items-center">
+              <p>No tokens found</p>
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableWrapper>
+    </div>
   )
 }
 
