@@ -66,8 +66,8 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col py-24 container">
-      <div className="py-5 flex flex-col md:flex-row gap-5 justify-between">
+    <main className="flex min-h-screen flex-col md:py-24 py-16">
+      <div className="container py-5 flex flex-col md:flex-row gap-5 justify-between">
         <SportFilter {...{ sport, setSport }}>
           <div className="flex gap-1 items-center">
             <h5 className="text-left">
@@ -76,7 +76,7 @@ export default function Home() {
             <ChevronDown />
           </div>
         </SportFilter>
-        <div className="flex flex-wrap items-center gap-5">
+        <div className="flex flex-wrap items-center gap-4">
           <div className="hidden md:flex gap-2 flex-wrap">
             <FilterBadge filter={selectedLeague} action={setSelectedLeague} />
             <FilterBadge filter={selectedTeam} action={setSelectedTeam} />

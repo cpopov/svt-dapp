@@ -32,7 +32,7 @@ function SearchBox({ setSearch = () => {}, timeOut = 1000 }) {
         </svg>
       </div>
       <Input
-        className="pl-8 placeholder:text-black rounded-full md:min-w-60"
+        className="pl-8 placeholder:text-black bg-white rounded-full md:min-w-60"
         type="text"
         placeholder="Search"
         value={searchTerm}

@@ -11,9 +11,9 @@ module.exports = {
   theme: {
     container: {
       padding: {
-        DEFAULT: '0.5rem',
-        sm: '0.5rem',
-        md: '0.5rem',
+        DEFAULT: '1rem',
+        sm: '1rem',
+        md: '1rem',
         lg: '3rem',
         '2xl': '5rem'
       },
@@ -44,6 +44,10 @@ module.exports = {
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
+        },
+        text_accent: {
+          DEFAULT: 'hsl(var(--accent-text))',
           foreground: 'hsl(var(--accent-foreground))'
         },
         popover: {
