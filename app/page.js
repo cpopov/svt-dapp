@@ -20,7 +20,7 @@ export default function Home() {
   const [selectedLeague, setSelectedLeague] = useState('')
   const [selectedTeam, setSelectedTeam] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('')
-  const [pageSize, setPageSize] = useState(10) // Default page size
+  const [pageSize, setPageSize] = useState(100) // Default page size
   const [page, setPage] = useState(1) // Default to first page
   const [totalPages, setTotalPages] = useState(5) // Default to 10 page
 
