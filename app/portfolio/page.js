@@ -1,18 +1,20 @@
 'use client'
 
+import { ChevronDown, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import Filter from '@/components/Filter'
 import PortfolioTable from '@/components/PortfolioTable'
 import SearchBox from '@/components/SearchBox'
-import { X } from 'lucide-react'
+import SportFilter from '@/components/ui/SportFilter'
 import { getUserPortfolio } from '@/actions'
 import { useAccount } from 'wagmi'
 
 export default function Home() {
   const [players, setPlayers] = useState([])
   const [sortBy, setSortBy] = useState('name')
+  const [sport, setSport] = useState('football')
   const [sortDirection, setSortDirection] = useState('asc')
   const [search, setSearch] = useState('')
   const [selectedLeague, setSelectedLeague] = useState('')
@@ -27,6 +29,7 @@ export default function Home() {
         team: selectedTeam,
         country: selectedCountry,
         search,
+        sport,
         sort: sortBy,
         dir: sortDirection
       })
@@ -42,6 +45,7 @@ export default function Home() {
     address,
     sortDirection,
     search,
+    sport,
     selectedLeague,
     selectedTeam,
     selectedCountry
@@ -57,10 +61,18 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col py-24">
+    <main className="flex min-h-screen flex-col md:py-24 py-16">
       <div className="py-5 flex flex-col md:flex-row gap-5 justify-between container">
-        <h5>{`Portfolio: ${players?.length || 0} players`}</h5>
-        <div className="flex flex-wrap items-center gap-5">
+        {/* <h5>{`Portfolio: ${players?.length || 0} players`}</h5> */}
+        <SportFilter {...{ sport, setSport }}>
+          <div className="flex gap-1 items-center">
+            <h5 className="text-left">
+              <span className="capitalize">{`${sport} `}</span>market
+            </h5>
+            <ChevronDown />
+          </div>
+        </SportFilter>
+        <div className="flex flex-wrap items-center gap-4">
           <div className="hidden md:flex gap-2 flex-wrap">
             <FilterBadge filter={selectedLeague} action={setSelectedLeague} />
             <FilterBadge filter={selectedTeam} action={setSelectedTeam} />
