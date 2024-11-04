@@ -91,10 +91,10 @@ const PlayerRow = ({ player }) => (
               </span>
             </p>
           </div> */}
-          <p className="text-text_accent font-bold">{player.name}</p>
+          <p className="text-accent-dark font-bold">{player.name}</p>
           <div className="flex gap-2 items-center">
             <Badge
-              className="rounded-full text-text_accent font-normal bg-[#EBEDF0] w-fit text-sm"
+              className="rounded-full text-accent-dark font-normal bg-[#EBEDF0] w-fit text-sm"
               variant="outline">
               {player.position}
             </Badge>
@@ -131,7 +131,7 @@ const PlayerRow = ({ player }) => (
             alt=""
           />
         </div>
-        <p className="text-text_accent font-bold">{player.name}</p>
+        <p className="text-accent-dark font-bold">{player.name}</p>
       </div>
     </TableCell>
     <TableCell className="hidden md:table-cell">{player.symbol}</TableCell>
