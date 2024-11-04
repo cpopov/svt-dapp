@@ -39,8 +39,10 @@ function Filter({
   const [league, setLeague] = useState(selectedLeague)
   const [team, setTeam] = useState(selectedTeam)
   const [country, setCountry] = useState(selectedCountry)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isPopOverOpen, setIsPopOverOpen] = useState(false)
   const closeRef = useRef(null)
-  // const drawerCloseRef = useRef(null)
+
   const { data, loading, error } = useFetchFilterData(sport)
   useEffect(() => {
     setLeague(selectedLeague)
@@ -52,7 +54,8 @@ function Filter({
     setSelectedLeague(league)
     setSelectedTeam(team)
     setSelectedCountry(country)
-    closeRef?.current?.click()
+    setIsPopOverOpen(false)
+    setIsDrawerOpen(false)
   }
 
   const resetFilters = () => {
@@ -62,13 +65,16 @@ function Filter({
     setTeam('')
     setCountry('')
     setLeague('')
-    closeRef?.current?.click()
-    // drawerCloseRef?.current?.click()
+    setIsPopOverOpen(false)
+    setIsDrawerOpen(false)
   }
   if (!data || error) return null
   return (
     <>
-      <Popover className="md:block hidden">
+      <Popover
+        open={isPopOverOpen}
+        onOpenChange={setIsPopOverOpen}
+        className="md:block hidden">
         <PopoverTrigger className="md:block hidden">
           <div className="uppercase flex items-center gap-1">
             <svg
@@ -92,9 +98,12 @@ function Filter({
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p className="text-lg font-medium">Filter players</p>
-              <PopoverClose ref={closeRef}>
-                <X size={20} className="text-accent" />
-              </PopoverClose>
+              <X
+                role="button"
+                onClick={() => setIsPopOverOpen(false)}
+                size={20}
+                className="text-accent"
+              />
             </div>
             {/* League Filter */}
             {data?.leagues.length ? (
@@ -170,7 +179,10 @@ function Filter({
           </div>
         </PopoverContent>
       </Popover>
-      <Drawer className="md:hidden">
+      <Drawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        className="md:hidden">
         <DrawerTrigger className="md:hidden">
           <div className="uppercase flex items-center gap-1">
             <svg
@@ -197,7 +209,7 @@ function Filter({
           <DrawerTitle className="pb-3">
             <div className="flex justify-between items-center">
               <p className="text-lg font-medium">Filter players</p>
-              <DrawerClose asChild>
+              <DrawerClose asChild onClick={() => setIsDrawerOpen(false)}>
                 <X role="button" size={20} className="text-accent" />
               </DrawerClose>
             </div>

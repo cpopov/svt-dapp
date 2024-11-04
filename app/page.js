@@ -1,10 +1,10 @@
 'use client'
 
-import { ChevronDown, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-import { Badge } from '@/components/ui/badge'
+import { ChevronDown } from 'lucide-react'
 import Filter from '@/components/Filter'
+import FilterBadge from '@/components/FilterBadge'
 import PaginationComp from '@/components/PaginationComp'
 import PlayerTable from '@/components/PlayerTable'
 import SearchBox from '@/components/SearchBox'
@@ -110,21 +110,4 @@ export default function Home() {
       <PaginationComp {...{ totalPages, page, setPage }} />
     </main>
   )
-}
-const FilterBadge = ({ filter, action = () => {} }) => {
-  return filter ? (
-    <Badge
-      className="rounded-full border-accent text-accent bg-[#EBEDF0] w-fit h-fit text-sm font-medium flex items-center"
-      variant="outline">
-      {filter}
-      <X
-        role="button"
-        className="stroke-[4px] ml-1"
-        size={12}
-        onClick={() => {
-          action('')
-        }}
-      />
-    </Badge>
-  ) : null
 }
