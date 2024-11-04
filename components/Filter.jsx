@@ -52,6 +52,7 @@ function Filter({
     setSelectedLeague(league)
     setSelectedTeam(team)
     setSelectedCountry(country)
+    closeRef?.current?.click()
   }
 
   const resetFilters = () => {
