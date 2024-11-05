@@ -1,6 +1,6 @@
 import './globals.css'
 
-import Footer from '@/components/Footer'
+// import Footer from '@/components/Footer'
 import { GoogleTagManager } from '@next/third-parties/google'
 import Navbar from '@/components/Navbar'
 import { Titillium_Web } from 'next/font/google'
@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <WagmiProviderComp initialState={initialState}>
           <Navbar />
           <div className="bg-background">{children}</div>
-          <Footer />
+          {/* <Footer /> */}
           <Toaster />
         </WagmiProviderComp>
       </body>
